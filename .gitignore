@@ -27,4 +27,4 @@ Thumbs.db
 /database/database.sqlite
 /database/database.sqlite-journal
 /storage/app/public/events
-/public/images/reveal/*_web_*.png
+/public/images/reveal/*_web_*
