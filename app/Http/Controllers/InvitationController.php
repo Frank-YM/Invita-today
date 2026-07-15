@@ -20,10 +20,10 @@ class InvitationController extends Controller
         }
 
         $event = Event::where('slug', $slug)->firstOrFail();
-        $isPreview = $request->query('preview') == '1';
         $isOwner = auth()->check() && auth()->id() === $event->user_id;
+        $isPreview = $isOwner && $request->query('preview') == '1';
 
-        if (!$event->is_published && !($isPreview && $isOwner)) {
+        if (!$event->is_published && !$isPreview) {
             abort(404);
         }
 
