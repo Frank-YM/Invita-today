@@ -34,7 +34,53 @@
         }
         h1{color:#6e5a63;font-size:1.45rem;font-weight:700}
         .subtitle-desc {color:#8a7ba5;font-size:0.85rem;margin-top:2px}
-        
+
+        /* Formulario clásico de edición */
+        .edit-field{ margin-bottom:12px; }
+        .edit-field label{
+            display:block; font-size:0.72rem; font-weight:700;
+            color:#6e5a63; letter-spacing:0.5px; text-transform:uppercase;
+            margin-bottom:5px;
+        }
+        .edit-field input, .edit-field textarea, .edit-field select{
+            width:100%; padding:9px 12px; font-size:0.9rem;
+            border:1.5px solid #e1ebf2; border-radius:10px;
+            background:#fff; font-family:inherit;
+            transition:border-color .15s;
+        }
+        .edit-field input:focus, .edit-field textarea:focus, .edit-field select:focus{
+            outline:none; border-color:#7c4dff;
+        }
+        .edit-field textarea{ resize:vertical; }
+        .edit-grid{ display:grid; grid-template-columns:80px 1fr; gap:10px; }
+        .edit-grid .edit-field:first-child{ margin-bottom:12px; }
+
+        .btn-save-form{
+            width:100%; padding:12px; margin-top:6px;
+            background:linear-gradient(135deg, #7c4dff, #5a4e8c);
+            color:#fff; border:none; border-radius:12px;
+            font-size:0.95rem; font-weight:700; cursor:pointer;
+            box-shadow:0 6px 18px rgba(124,77,255,0.25);
+            transition:transform .12s, box-shadow .12s;
+            font-family:inherit;
+        }
+        .btn-save-form:hover{ transform:translateY(-2px); box-shadow:0 10px 24px rgba(124,77,255,0.35); }
+
+        .published-badge{
+            background:rgba(8,107,85,0.1); color:#086b55;
+            padding:6px 12px; border-radius:999px; font-size:0.78rem; font-weight:700;
+            display:inline-flex; align-items:center; gap:6px;
+        }
+        .published-badge::before{
+            content:""; width:7px; height:7px; border-radius:50%; background:#086b55;
+            box-shadow:0 0 0 3px rgba(8,107,85,0.2);
+            animation:pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot{
+            0%,100%{ box-shadow:0 0 0 3px rgba(8,107,85,0.2); }
+            50%    { box-shadow:0 0 0 5px rgba(8,107,85,0.35); }
+        }
+
         .btn-view-invite {
             display: inline-flex;
             align-items: center;
@@ -234,7 +280,21 @@
             <h1>Control de Invitación</h1>
             <p class="subtitle-desc">Configura tu evento mediante el asistente interactivo.</p>
         </div>
-        <div style="display:flex; gap:10px; align-items:center;">
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            @if($event->is_published)
+                <span class="published-badge">Publicada</span>
+                <form method="POST" action="{{ route('event.publish') }}" style="display:inline;">
+                    @csrf
+                    <input type="hidden" name="publish" value="0">
+                    <button type="submit" class="btn-view-invite" style="background:#fdf2f2; color:#e63946; border-color:#fdf2f2; cursor:pointer;" onclick="return confirm('¿Despublicar y volver a modo borrador?')">Despublicar</button>
+                </form>
+            @else
+                <form method="POST" action="{{ route('event.publish') }}" style="display:inline;">
+                    @csrf
+                    <input type="hidden" name="publish" value="1">
+                    <button type="submit" class="btn-view-invite" style="background:#086b55; color:#fff; border-color:#086b55; cursor:pointer;">Publicar invitación</button>
+                </form>
+            @endif
             <a href="{{ route('invitation.public', ['slug' => $event->slug]) }}?preview=1" target="_blank" class="btn-view-invite">Ver Invitación</a>
             <form method="POST" action="{{ route('logout') }}" style="display:inline;">
                 @csrf
@@ -247,11 +307,94 @@
 
     <div class="admin-grid">
         
-        {{-- COLUMNA IZQUIERDA: ASISTENTE CONVERSACIONAL (CHAT WIZARD) --}}
+        {{-- COLUMNA IZQUIERDA: FORMULARIO DE EDICIÓN + ASISTENTE --}}
         <div>
+            {{-- FORMULARIO CLÁSICO --}}
+            <div class="card" style="padding:16px 20px; margin-bottom:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                    <div class="card-title" style="margin:0;">Detalles del evento</div>
+                    <button type="button" onclick="toggleWizard()" style="background:#eae3f7; border:none; color:#5a4e8c; padding:6px 12px; border-radius:8px; font-size:0.75rem; font-weight:600; cursor:pointer;">💬 Asistente IA</button>
+                </div>
+
+                <form method="POST" action="{{ route('event.update') }}" id="edit-form">
+                    @csrf
+                    <input type="hidden" name="color_primary" value="{{ $event->color_primary }}">
+                    <input type="hidden" name="color_accent" value="{{ $event->color_accent }}">
+                    <input type="hidden" name="color_secondary" value="{{ $event->color_secondary }}">
+                    <input type="hidden" name="theme_character" value="{{ $event->theme_character }}">
+                    <input type="hidden" name="template" value="{{ $event->template ?? 'classic' }}">
+                    <input type="hidden" name="is_published" value="{{ $event->is_published ? '1' : '0' }}">
+                    <input type="hidden" name="rsvp_button_text" value="Confirmar asistencia">
+
+                    <div class="edit-grid">
+                        <div class="edit-field">
+                            <label>Emoji</label>
+                            <input type="text" name="emoji" maxlength="8" value="{{ $event->emoji }}" placeholder="🎂" style="text-align:center; font-size:1.3rem;">
+                        </div>
+                        <div class="edit-field" style="flex:1;">
+                            <label>Tipo de evento</label>
+                            <select name="event_type">
+                                <option value="babyshower"   @selected($event->event_type==='babyshower')>🍼 Baby Shower</option>
+                                <option value="cumple"       @selected($event->event_type==='cumple')>🎂 Cumpleaños</option>
+                                <option value="bautizo"      @selected($event->event_type==='bautizo')>🕊️ Bautizo</option>
+                                <option value="revelacion"   @selected($event->event_type==='revelacion')>🤰 Revelación de género</option>
+                                <option value="bienvenida"   @selected($event->event_type==='bienvenida')>🍼 Bienvenida</option>
+                                <option value="comunion"     @selected($event->event_type==='comunion')>🕯️ Comunión</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Título</label>
+                        <input type="text" name="title" required maxlength="120" value="{{ $event->title }}">
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Subtítulo (opcional)</label>
+                        <textarea name="subtitle" rows="2" maxlength="200">{{ $event->subtitle }}</textarea>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Fecha y hora</label>
+                        <input type="datetime-local" name="date" required value="{{ optional($event->date)->format('Y-m-d\TH:i') }}">
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Dirección / lugar</label>
+                        <input type="text" name="place" required maxlength="200" value="{{ $event->place }}" placeholder="Ej: Calle Los Sauces 123, Lima">
+                    </div>
+
+                    <div class="edit-grid">
+                        <div class="edit-field">
+                            <label>Latitud</label>
+                            <input type="number" name="lat" step="any" required value="{{ $event->lat }}" id="edit-lat">
+                        </div>
+                        <div class="edit-field">
+                            <label>Longitud</label>
+                            <input type="number" name="lng" step="any" required value="{{ $event->lng }}" id="edit-lng">
+                        </div>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Ubicación en el mapa <small style="color:#8a7ba5;">— tocá para mover el pin</small></label>
+                        <div id="edit-map" style="height:200px; border-radius:12px; overflow:hidden; border:1px solid #e1ebf2;"></div>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Notas especiales (opcional)</label>
+                        <textarea name="extra_info" rows="3" maxlength="1000" placeholder="Vestimenta, lluvia de sobres, sugerencia de regalos…">{{ $event->extra_info }}</textarea>
+                    </div>
+
+                    <button type="submit" class="btn-save-form">💾 Guardar cambios</button>
+                </form>
+            </div>
+
+            {{-- ASISTENTE IA (oculto por default, se abre con el botón) --}}
+            <div id="wizard-container" style="display:none;">
             <div class="card" style="height: 470px; display: flex; flex-direction: column; padding: 0; overflow: hidden; position: relative; border-radius: 18px;">
-                <div class="card-title" style="margin: 0; padding: 12px 18px; background: #fff; border-bottom: 1.5px solid #eae3f7;">
-                    Asistente de Configuración
+                <div class="card-title" style="margin: 0; padding: 12px 18px; background: #fff; border-bottom: 1.5px solid #eae3f7; display:flex; justify-content:space-between; align-items:center;">
+                    <span>Asistente de Configuración</span>
+                    <button type="button" onclick="toggleWizard()" style="background:transparent; border:none; color:#5a4e8c; cursor:pointer; font-size:1.2rem;">✕</button>
                 </div>
                 
                 {{-- Contenedor de mensajes --}}
@@ -290,6 +433,7 @@
                     <!-- Renderizado dinámico en JS -->
                 </div>
             </div>
+            </div>{{-- fin #wizard-container --}}
         </div>
 
         {{-- COLUMNA DERECHA: ENLACE COMPARTIR + INVITADOS --}}
@@ -1033,6 +1177,49 @@
         }
 
         document.addEventListener('DOMContentLoaded', renderPresets);
+
+        // === Toggle Asistente IA ===
+        function toggleWizard(){
+            const box = document.getElementById('wizard-container');
+            if (!box) return;
+            const open = box.style.display === 'none' || box.style.display === '';
+            box.style.display = open ? 'block' : 'none';
+            if (open) box.scrollIntoView({ behavior:'smooth', block:'start' });
+        }
+
+        // === Mapa Leaflet en formulario clásico ===
+        (function initEditMap(){
+            const mapEl = document.getElementById('edit-map');
+            if (!mapEl || typeof L === 'undefined') return;
+            const latInput = document.getElementById('edit-lat');
+            const lngInput = document.getElementById('edit-lng');
+            let lat = parseFloat(latInput.value) || -12.046374;
+            let lng = parseFloat(lngInput.value) || -77.042793;
+
+            const map = L.map('edit-map').setView([lat, lng], 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution:'© OpenStreetMap', maxZoom:19,
+            }).addTo(map);
+
+            const marker = L.marker([lat, lng], { draggable:true }).addTo(map);
+
+            function updateInputs(newLat, newLng){
+                latInput.value = newLat.toFixed(6);
+                lngInput.value = newLng.toFixed(6);
+            }
+
+            marker.on('dragend', e => {
+                const p = e.target.getLatLng();
+                updateInputs(p.lat, p.lng);
+            });
+            map.on('click', e => {
+                marker.setLatLng(e.latlng);
+                updateInputs(e.latlng.lat, e.latlng.lng);
+            });
+
+            // Recalcular tamaño cuando la card entra en viewport (fix leaflet dentro de flex/hidden)
+            setTimeout(() => map.invalidateSize(), 250);
+        })();
 
         // === Buscador de imágenes de revelación ===
         let revealCurrentSlot = null;

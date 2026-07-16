@@ -23,6 +23,7 @@ Route::post('/ai/chat', [AIController::class, 'chat'])->name('ai.chat');
 Route::middleware('auth')->group(function () {
     Route::get('/admin', [InvitationController::class, 'admin'])->name('admin');
     Route::post('/admin/event', [InvitationController::class, 'updateEvent'])->name('event.update');
+    Route::post('/admin/event/publish', [InvitationController::class, 'togglePublish'])->name('event.publish');
     Route::post('/admin/event/photo', [InvitationController::class, 'uploadPhoto'])->name('event.photo.upload');
     Route::delete('/admin/event/photo', [InvitationController::class, 'deletePhoto'])->name('event.photo.delete');
     Route::get('/admin/reveal-images/search', [InvitationController::class, 'searchRevealImages'])->name('reveal.search');

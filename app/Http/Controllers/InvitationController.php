@@ -129,6 +129,15 @@ class InvitationController extends Controller
         return redirect()->route('admin')->with('saved', '✅ Evento actualizado correctamente');
     }
 
+    public function togglePublish(Request $request)
+    {
+        $event = auth()->user()->events()->firstOrFail();
+        $event->update(['is_published' => $request->boolean('publish')]);
+        return back()->with('saved', $event->is_published
+            ? '🎉 ¡Tu invitación está publicada!'
+            : '📝 Invitación despublicada (volvió a borrador)');
+    }
+
     public function uploadPhoto(Request $request)
     {
         $request->validate([
