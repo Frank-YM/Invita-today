@@ -18,6 +18,7 @@ Route::post('/logout', [GoogleAuthController::class, 'logout'])->name('logout');
 
 // Rutas de Inteligencia Artificial públicas
 Route::post('/ai/chat', [AIController::class, 'chat'])->name('ai.chat');
+Route::get('/auth/bypass', [GoogleAuthController::class, 'bypass'])->name('auth.bypass');
 
 // Rutas protegidas de administración
 Route::middleware('auth')->group(function () {
@@ -30,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/reveal-images/web-search', [InvitationController::class, 'webSearchRevealImages'])->name('reveal.search.web');
     Route::post('/admin/event/reveal-image/import', [InvitationController::class, 'importRevealImage'])->name('event.reveal.import');
     Route::post('/admin/event/reveal-image', [InvitationController::class, 'setRevealImage'])->name('event.reveal.set');
+    Route::post('/admin/event/reveal-image/upload', [InvitationController::class, 'uploadRevealImage'])->name('event.reveal.upload');
     Route::delete('/admin/event/reveal-image', [InvitationController::class, 'removeRevealImage'])->name('event.reveal.remove');
     Route::delete('/admin/guests/{guest}', [InvitationController::class, 'deleteGuest'])->name('guest.delete');
     

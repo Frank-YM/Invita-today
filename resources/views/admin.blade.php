@@ -452,28 +452,49 @@
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                         @foreach([['slot'=>1,'label'=>'Niño'], ['slot'=>2,'label'=>'Niña']] as $s)
                             @php $path = $event->{'reveal_image_'.$s['slot']}; @endphp
-                            <div style="border:1.5px dashed #d8d0c2; border-radius:10px; padding:6px; text-align:center; background:#fbf8f2;">
+                            <div style="border:1.5px dashed #d8d0c2; border-radius:12px; padding:8px; text-align:center; background:#fbf8f2; display:flex; flex-direction:column; justify-content:space-between; min-height:120px;">
                                 <div style="font-size:0.7rem; color:#8a7ba5; font-weight:700; margin-bottom:4px;">{{ $s['label'] }}</div>
                                 @if($path)
-                                    <img src="{{ asset($path) }}" alt="{{ $s['label'] }}" style="width:100%; height:70px; object-fit:contain; margin-bottom:4px;">
-                                    <div style="display:flex; gap:4px;">
-                                        <button type="button" class="btn-sm" style="flex:1; font-size:0.65rem; padding:4px;" onclick="openRevealSearch({{ $s['slot'] }})">🔄 Cambiar</button>
-                                        <form method="POST" action="{{ route('event.reveal.remove') }}" style="flex:1; margin:0;">
-                                            @csrf @method('DELETE')
+                                    <div style="flex:1; display:flex; align-items:center; justify-content:center; margin-bottom:6px;">
+                                        <img src="{{ asset($path) }}" alt="{{ $s['label'] }}" style="max-width:100%; max-height:60px; object-fit:contain; border-radius:4px;">
+                                    </div>
+                                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:4px; margin-bottom:4px;">
+                                        <button type="button" style="background:#e8e3f2; color:#5a4e8c; border:none; border-radius:6px; cursor:pointer; padding:4px; font-size:0.65rem; font-weight:600; display:inline-flex; align-items:center; justify-content:center; gap:2px;" onclick="openRevealSearch({{ $s['slot'] }})">🔍 Buscar</button>
+                                        
+                                        <form method="POST" action="{{ route('event.reveal.upload') }}" enctype="multipart/form-data" id="revealUploadForm{{ $s['slot'] }}" style="margin:0;">
+                                            @csrf
                                             <input type="hidden" name="slot" value="{{ $s['slot'] }}">
-                                            <button type="submit" class="btn-sm" style="width:100%; font-size:0.65rem; padding:4px;">🗑️</button>
+                                            <input type="file" name="image" accept="image/*" style="display:none;" onchange="this.form.submit()">
+                                            <button type="button" style="background:#e8e3f2; color:#5a4e8c; border:none; border-radius:6px; cursor:pointer; padding:4px; font-size:0.65rem; font-weight:600; width:100%; display:inline-flex; align-items:center; justify-content:center; gap:2px;" onclick="this.previousElementSibling.click()">📤 Subir</button>
                                         </form>
                                     </div>
+                                    <form method="POST" action="{{ route('event.reveal.remove') }}" onsubmit="return confirm('¿Quitar esta imagen?')" style="margin:0;">
+                                        @csrf @method('DELETE')
+                                        <input type="hidden" name="slot" value="{{ $s['slot'] }}">
+                                        <button type="submit" class="btn-sm" style="width:100%; font-size:0.65rem; padding:4px 8px; display:inline-flex; align-items:center; justify-content:center; gap:2px;">🗑️ Quitar</button>
+                                    </form>
                                 @else
-                                    <button type="button" onclick="openRevealSearch({{ $s['slot'] }})" style="width:100%; height:70px; background:transparent; border:none; cursor:pointer; color:#8a7ba5; font-size:0.7rem; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;">
-                                        <span style="font-size:1.4rem;">🔍</span>
-                                        <span>Buscar imagen</span>
-                                    </button>
+                                    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:6px; padding:4px 0;">
+                                        <button type="button" style="background:#e8e3f2; color:#5a4e8c; border:none; border-radius:6px; cursor:pointer; padding:6px; font-size:0.7rem; font-weight:600; display:inline-flex; align-items:center; justify-content:center; gap:3px;" onclick="openRevealSearch({{ $s['slot'] }})">
+                                            <span>🔍</span>
+                                            <span>Buscar del Catálogo</span>
+                                        </button>
+                                        
+                                        <form method="POST" action="{{ route('event.reveal.upload') }}" enctype="multipart/form-data" id="revealUploadForm{{ $s['slot'] }}" style="margin:0;">
+                                            @csrf
+                                            <input type="hidden" name="slot" value="{{ $s['slot'] }}">
+                                            <input type="file" name="image" accept="image/*" style="display:none;" onchange="this.form.submit()">
+                                            <button type="button" style="background:#e8e3f2; color:#5a4e8c; border:none; border-radius:6px; cursor:pointer; padding:6px; font-size:0.7rem; font-weight:600; width:100%; display:inline-flex; align-items:center; justify-content:center; gap:3px;" onclick="this.previousElementSibling.click()">
+                                                <span>📤</span>
+                                                <span>Subir Imagen</span>
+                                            </button>
+                                        </form>
+                                    </div>
                                 @endif
                             </div>
                         @endforeach
                     </div>
-                    <small style="display:block; margin-top:6px; color:#8a7ba5; font-size:0.65rem; text-align:center;">Buscá por nombre: goku, kitty, angel…</small>
+                    <small style="display:block; margin-top:6px; color:#8a7ba5; font-size:0.65rem; text-align:center;">Buscá o subí tu propio archivo (PNG/JPG/WEBP hasta 4MB).</small>
                 </div>
 
                 {{-- Modal buscador de imágenes --}}

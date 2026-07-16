@@ -324,8 +324,39 @@ class InvitationController extends Controller
     {
         $request->validate(['slot' => 'required|in:1,2']);
         $event = auth()->user()->events()->firstOrFail();
-        $event->update(['reveal_image_' . (int) $request->input('slot') => null]);
+        $column = 'reveal_image_' . (int) $request->input('slot');
+        $path = $event->{$column};
+
+        if ($path && str_starts_with($path, 'storage/')) {
+            $relative = substr($path, 8);
+            Storage::disk('public')->delete($relative);
+        }
+
+        $event->update([$column => null]);
         return back()->with('saved', '🗑️ Imagen quitada');
+    }
+
+    public function uploadRevealImage(Request $request)
+    {
+        $request->validate([
+            'slot'  => 'required|in:1,2',
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp,gif|max:4096',
+        ]);
+
+        $event = auth()->user()->events()->firstOrFail();
+        $slot = (int) $request->input('slot');
+        $column = "reveal_image_{$slot}";
+
+        $oldPath = $event->{$column};
+        if ($oldPath && str_starts_with($oldPath, 'storage/')) {
+            $relative = substr($oldPath, 8);
+            Storage::disk('public')->delete($relative);
+        }
+
+        $path = $request->file('image')->store("events/{$event->id}", 'public');
+        $event->update([$column => 'storage/' . $path]);
+
+        return back()->with('saved', '🎨 Imagen de revelación subida correctamente');
     }
 
     public function deleteGuest(Guest $guest)
