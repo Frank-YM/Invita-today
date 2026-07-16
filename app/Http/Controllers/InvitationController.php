@@ -118,6 +118,7 @@ class InvitationController extends Controller
         ]);
         
         $event = auth()->user()->events()->firstOrFail();
+        $oldTitle = $event->title;
 
         $data['is_published'] = $request->boolean('is_published');
         foreach (['show_countdown', 'show_map', 'show_confirmed_count', 'show_messages'] as $flag) {
@@ -125,6 +126,12 @@ class InvitationController extends Controller
         }
 
         $event->update($data);
+
+        if ($oldTitle !== $event->title) {
+            $event->update([
+                'slug' => $this->generateUniqueSlug($event->title, $event->id),
+            ]);
+        }
 
         return redirect()->route('admin')->with('saved', '✅ Evento actualizado correctamente');
     }
