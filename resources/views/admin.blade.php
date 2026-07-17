@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel · Asistente de Configuración</title>
+    <title>Panel de administración</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -26,14 +26,53 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
-            gap: 8px;
-            border-bottom: 1px solid #e1ebf2;
-            padding-bottom: 12px;
+            gap: 12px;
+            background: #fff;
+            padding: 14px 18px;
+            border-radius: 16px;
+            box-shadow: 0 4px 14px rgba(110,90,99,0.06);
+            border: 1px solid #f0e8ea;
         }
-        h1{color:#6e5a63;font-size:1.45rem;font-weight:700}
-        .subtitle-desc {color:#8a7ba5;font-size:0.85rem;margin-top:2px}
+        .header-left { display:flex; align-items:center; gap:12px; }
+        .header-brand {
+            width:36px; height:36px; border-radius:12px;
+            background: linear-gradient(135deg,#d4a3b3,#7c4dff);
+            display:flex; align-items:center; justify-content:center;
+            color:#fff; font-weight:900; font-size:1.05rem;
+            box-shadow: 0 4px 10px rgba(124,77,255,0.25);
+        }
+        h1{color:#3d2c40;font-size:1.15rem;font-weight:800;line-height:1.1}
+        .subtitle-desc {color:#8a7ba5;font-size:0.72rem;margin-top:2px;font-weight:500}
+
+        .header-actions { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+
+        /* Chip de usuario */
+        .user-chip {
+            display:flex; align-items:center; gap:8px;
+            background:#faf8f5; border:1px solid #efe6e9;
+            padding:4px 6px 4px 4px; border-radius:999px;
+        }
+        .user-avatar {
+            width:30px; height:30px; border-radius:50%;
+            background: linear-gradient(135deg, #d4a3b3, #7c4dff);
+            color:#fff; font-weight:800; font-size:0.82rem;
+            display:flex; align-items:center; justify-content:center;
+            flex-shrink:0;
+        }
+        .user-name {
+            font-size:0.82rem; font-weight:700; color:#6e5a63;
+            padding-right:4px; max-width:120px; overflow:hidden;
+            text-overflow:ellipsis; white-space:nowrap;
+        }
+        .user-logout {
+            background:transparent; border:none; cursor:pointer;
+            color:#a48b93; padding:4px 8px; border-radius:999px;
+            font-size:0.75rem; font-weight:600;
+            transition: background .15s, color .15s;
+        }
+        .user-logout:hover { background:#fdf2f2; color:#e63946; }
 
         /* Formulario clásico de edición */
         .edit-field{ margin-bottom:12px; }
@@ -81,24 +120,30 @@
             50%    { box-shadow:0 0 0 5px rgba(8,107,85,0.35); }
         }
 
-        .btn-view-invite {
+        .btn-nav {
             display: inline-flex;
             align-items: center;
             text-decoration: none;
             background: #fff;
             color: #6e5a63;
-            border: 1.5px solid #d4a3b3;
-            padding: 8px 16px;
+            border: 1.5px solid #efe6e9;
+            padding: 7px 14px;
             border-radius: 999px;
-            font-weight: bold;
-            font-size: 0.82rem;
-            transition: 0.2s;
+            font-weight: 700;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
         }
-        .btn-view-invite:hover {
-            background: #d4a3b3;
-            color: #fff;
-            transform: translateY(-2px);
-        }
+        .btn-nav:hover { border-color:#d4a3b3; transform: translateY(-1px); }
+        .btn-nav-primary { background:#086b55; color:#fff; border-color:#086b55; }
+        .btn-nav-primary:hover { background:#075c48; border-color:#075c48; color:#fff; }
+        .btn-nav-danger { background:#fdf2f2; color:#e63946; border-color:#fdf2f2; }
+        .btn-nav-danger:hover { background:#fce4e4; border-color:#fce4e4; color:#c32d3a; }
+
+        /* Alias legacy para no romper otros usos de .btn-view-invite */
+        .btn-view-invite { display:inline-flex; align-items:center; text-decoration:none; background:#fff; color:#6e5a63; border:1.5px solid #efe6e9; padding:7px 14px; border-radius:999px; font-weight:700; font-size:0.78rem; cursor:pointer; transition:.15s; font-family:inherit; }
+        .btn-view-invite:hover { border-color:#d4a3b3; transform: translateY(-1px); }
 
         .admin-grid {
             display: grid;
@@ -118,9 +163,13 @@
             .card-title { font-size: 0.95rem !important; }
 
             /* Header: apilar título y botones */
-            header { flex-direction: column; align-items: flex-start !important; gap: 8px; }
-            header > div:last-child { width: 100%; display: flex; gap: 6px; flex-wrap: wrap; }
-            .btn-view-invite { flex: 1; text-align: center; padding: 8px 10px !important; font-size: 0.8rem !important; }
+            .header { flex-direction: column; align-items: stretch !important; gap: 10px; padding: 12px 14px !important; }
+            .header-left { justify-content: flex-start; }
+            .header-actions { width: 100%; justify-content: space-between; }
+            .btn-nav { flex: 1; justify-content: center; padding: 7px 10px; font-size: 0.75rem; }
+            .btn-view-invite { flex: 1; justify-content: center; padding: 7px 10px !important; font-size: 0.75rem !important; }
+            .user-chip { order: -1; margin-left: auto; flex: 0; }
+            .user-name { max-width: 90px; }
 
             /* Galería de modelos: 3 columnas en vez de 5 */
             #preset-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 6px !important; }
@@ -244,62 +293,189 @@
             box-shadow: 0 4px 10px rgba(110,90,99,0.15);
         }
 
-        /* Burbujas del Asistente de Configuración */
-        .wizard-msg {
-            max-width: 85%;
-            padding: 10px 14px;
-            border-radius: 14px;
-            font-size: 0.88rem;
-            line-height: 1.35;
-            animation: popMsg 0.2s ease;
-        }
-        @keyframes popMsg {
-            from { transform: scale(0.97); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        .wizard-msg.bot {
-            background: #fff;
-            align-self: flex-start;
-            border: 1px solid #e1ebf2;
-            color: #2c2235;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.01);
-            border-bottom-left-radius: 4px;
-        }
-        .wizard-msg.user {
-            background: #6e5a63;
+        /* Botón IA inline (al lado del label) */
+        .btn-ai-inline {
+            background: linear-gradient(135deg, #7c4dff 0%, #b388ff 100%);
             color: #fff;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-            box-shadow: 0 4px 12px rgba(110,90,99,0.1);
+            border: none;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(124,77,255,0.25);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            white-space: nowrap;
         }
+        .btn-ai-inline:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(124,77,255,0.3); }
+        .btn-ai-inline:disabled { opacity: 0.7; cursor: wait; transform: none; }
+
+        /* Botón mi ubicación */
+        .btn-mylocation {
+            background:#faf8f5; border:1px solid #efe6e9;
+            color:#6e5a63; padding:4px 10px; border-radius:8px;
+            font-size:0.72rem; font-weight:600; cursor:pointer;
+            font-family:inherit; white-space:nowrap;
+            transition: background .15s, border-color .15s;
+        }
+        .btn-mylocation:hover { background:#eae3f7; border-color:#c9c3e6; color:#7c4dff; }
+        .btn-mylocation:disabled { opacity:0.6; cursor:wait; }
+
+        /* Buscador de dirección (Nominatim) */
+        .place-search-wrap { position:relative; }
+        .place-search-status {
+            position:absolute; right:10px; top:50%; transform:translateY(-50%);
+            font-size:0.7rem; color:#8a7ba5; pointer-events:none;
+        }
+        .place-search-results {
+            position:absolute; top:calc(100% + 4px); left:0; right:0;
+            background:#fff; border:1px solid #efe6e9; border-radius:12px;
+            box-shadow: 0 8px 24px rgba(110,90,99,0.12);
+            max-height:260px; overflow-y:auto; z-index:1000;
+            display:none;
+        }
+        .place-search-results.open { display:block; }
+        .place-search-item {
+            padding:10px 12px; cursor:pointer; font-size:0.82rem;
+            border-bottom:1px solid #faf8f5; color:#3d2c40;
+            display:flex; align-items:flex-start; gap:8px;
+            transition: background .12s;
+        }
+        .place-search-item:last-child { border-bottom:none; }
+        .place-search-item:hover, .place-search-item.active { background:#faf8f5; }
+        .place-search-item .icon { color:#7c4dff; flex-shrink:0; margin-top:2px; }
+        .place-search-item .main { font-weight:600; }
+        .place-search-item .sub { color:#8a7ba5; font-size:0.72rem; margin-top:1px; font-weight:500; }
+        .place-badge { display:inline-block; background:#e8f7f0; color:#086b55; font-size:0.6rem; font-weight:700; padding:1px 6px; border-radius:999px; margin-left:4px; letter-spacing:0.3px; vertical-align:middle; }
+        .place-search-empty { padding:14px 14px 6px; text-align:center; color:#8a7ba5; font-size:0.8rem; font-style:italic; }
+        .place-search-global {
+            display:block; width:calc(100% - 20px); margin:6px 10px 10px;
+            background:#faf8f5; border:1px solid #efe6e9; color:#6e5a63;
+            padding:8px 12px; border-radius:10px; font-size:0.78rem; font-weight:600;
+            cursor:pointer; font-family:inherit; transition: background .15s, color .15s;
+        }
+        .place-search-global:hover { background:#eae3f7; color:#7c4dff; border-color:#c9c3e6; }
+
+        /* Mapa expandible: crece en hover para seleccionar más fácil */
+        .edit-map-expandable {
+            height:200px;
+            border-radius:12px;
+            overflow:hidden;
+            border:1px solid #e1ebf2;
+            transition: height .3s ease;
+        }
+        .edit-map-expandable:hover,
+        .edit-map-expandable.expanded {
+            height:420px;
+            border-color:#7c4dff;
+            box-shadow: 0 8px 24px rgba(124,77,255,0.12);
+        }
+        @media (max-width: 600px) {
+            .edit-map-expandable:hover,
+            .edit-map-expandable.expanded { height:340px; }
+        }
+
+        /* Fila de toggle (checkbox estilizado) */
+        .toggle-row {
+            display:flex; align-items:flex-start; gap:10px;
+            background:#faf8f5; border:1px solid #efe6e9;
+            border-radius:12px; padding:10px 12px; margin:6px 0 12px;
+            cursor:pointer; transition: border-color .15s;
+        }
+        .toggle-row:hover { border-color:#d4a3b3; }
+        .toggle-row input[type=checkbox] { margin-top:3px; accent-color:#7c4dff; width:16px; height:16px; cursor:pointer; }
+        .toggle-row span { display:flex; flex-direction:column; gap:2px; font-size:0.82rem; color:#6e5a63; }
+        .toggle-row small { color:#8a7ba5; font-size:0.7rem; font-weight:500; }
+
+        /* Grid de galería en admin */
+        .admin-gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:8px; }
+        .admin-gallery-item { position:relative; aspect-ratio:1/1; border-radius:8px; overflow:hidden; background:#f6f4f0; }
+        .admin-gallery-item img { width:100%; height:100%; object-fit:cover; display:block; }
+        .admin-gallery-item .name-tag { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top, rgba(0,0,0,.7), transparent); color:#fff; padding:10px 5px 3px; font-size:0.6rem; font-weight:600; text-align:center; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .admin-gallery-item .del-btn { position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:rgba(230,57,70,0.9); color:#fff; border:none; font-size:0.8rem; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; }
+        .admin-gallery-empty { padding:20px 10px; text-align:center; color:#8a7ba5; font-size:0.8rem; background:#faf8f5; border-radius:10px; }
+
+        /* Fila sutil de coordenadas debajo del mapa */
+        .coords-row {
+            display:flex; align-items:center; gap:8px;
+            margin-top:6px; padding:2px 4px;
+            font-size:0.7rem; color:#a48b93;
+        }
+        .coords-label { font-weight:600; text-transform:uppercase; letter-spacing:0.4px; }
+        .coords-row input {
+            flex:1; min-width:0; width:auto !important;
+            background:transparent !important;
+            border:none !important;
+            border-bottom:1px dashed #e1d6da !important;
+            border-radius:0 !important;
+            padding:2px 0 !important;
+            font-size:0.7rem !important;
+            font-family: 'SFMono-Regular', Menlo, monospace !important;
+            color:#a48b93 !important;
+        }
+        .coords-row input:focus {
+            outline:none; color:#6e5a63 !important;
+            border-bottom-color:#7c4dff !important;
+        }
+        /* Ocultar spinner del input number */
+        .coords-row input::-webkit-inner-spin-button,
+        .coords-row input::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
+        .coords-row input { -moz-appearance:textfield; }
     </style>
 </head>
 <body>
+    @php
+        $firstName = trim(explode(' ', trim(auth()->user()->name ?? ''))[0] ?? '') ?: 'Usuario';
+        $initial   = mb_strtoupper(mb_substr($firstName, 0, 1));
+    @endphp
     <div class="header">
-        <div>
-            <h1>Control de Invitación</h1>
-            <p class="subtitle-desc">Configura tu evento mediante el asistente interactivo.</p>
+        <div class="header-left">
+            <a href="{{ route('events.index') }}" class="header-brand" title="Volver a Mis eventos" style="text-decoration:none;">←</a>
+            <div>
+                <h1>{{ $event->title }}</h1>
+                <p class="subtitle-desc">
+                    <a href="{{ route('events.index') }}" style="color:#8a7ba5; text-decoration:none;">Mis eventos</a>
+                    <span style="opacity:.5">›</span>
+                    Configurando este evento
+                    @if($userEvents->count() > 1)
+                        <span style="opacity:.5"> · </span>
+                        <select onchange="if(this.value) location.href=this.value" style="border:none; background:transparent; color:#7c4dff; font-weight:600; cursor:pointer; font-size:0.72rem; padding:0;">
+                            <option value="">Cambiar evento…</option>
+                            @foreach($userEvents as $e)
+                                @if($e->id !== $event->id)
+                                    <option value="{{ route('events.select', $e) }}">{{ $e->emoji }} {{ $e->title }}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    @endif
+                </p>
+            </div>
         </div>
-        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <div class="header-actions">
             @if($event->is_published)
                 <span class="published-badge">Publicada</span>
-                <form method="POST" action="{{ route('event.publish') }}" style="display:inline;">
+                <form method="POST" action="{{ route('event.publish') }}" style="display:inline; margin:0;">
                     @csrf
                     <input type="hidden" name="publish" value="0">
-                    <button type="submit" class="btn-view-invite" style="background:#fdf2f2; color:#e63946; border-color:#fdf2f2; cursor:pointer;" onclick="return confirm('¿Despublicar y volver a modo borrador?')">Despublicar</button>
+                    <button type="submit" class="btn-nav btn-nav-danger" onclick="return confirm('¿Despublicar y volver a modo borrador?')">Despublicar</button>
                 </form>
             @else
-                <form method="POST" action="{{ route('event.publish') }}" style="display:inline;">
+                <form method="POST" action="{{ route('event.publish') }}" style="display:inline; margin:0;">
                     @csrf
                     <input type="hidden" name="publish" value="1">
-                    <button type="submit" class="btn-view-invite" style="background:#086b55; color:#fff; border-color:#086b55; cursor:pointer;">Publicar invitación</button>
+                    <button type="submit" class="btn-nav btn-nav-primary">Publicar</button>
                 </form>
             @endif
-            <a href="{{ route('invitation.public', ['slug' => $event->slug]) }}?preview=1" target="_blank" class="btn-view-invite">Ver Invitación</a>
-            <form method="POST" action="{{ route('logout') }}" style="display:inline;">
-                @csrf
-                <button type="submit" class="btn-view-invite" style="background:#fdf2f2; color:#e63946; border-color:#fdf2f2; cursor:pointer;">Cerrar Sesión</button>
-            </form>
+            <a href="{{ route('invitation.public', ['slug' => $event->slug]) }}?preview=1" target="_blank" class="btn-nav">Ver invitación</a>
+
+            <div class="user-chip" title="{{ auth()->user()->name }}">
+                <div class="user-avatar">{{ $initial }}</div>
+                <span class="user-name">{{ $firstName }}</span>
+                <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                    @csrf
+                    <button type="submit" class="user-logout" title="Cerrar sesión">Salir</button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -311,35 +487,46 @@
         <div>
             {{-- FORMULARIO CLÁSICO --}}
             <div class="card" style="padding:16px 20px; margin-bottom:16px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <div style="margin-bottom:14px;">
                     <div class="card-title" style="margin:0;">Detalles del evento</div>
-                    <button type="button" onclick="toggleWizard()" style="background:#eae3f7; border:none; color:#5a4e8c; padding:6px 12px; border-radius:8px; font-size:0.75rem; font-weight:600; cursor:pointer;">💬 Asistente IA</button>
                 </div>
 
                 <form method="POST" action="{{ route('event.update') }}" id="edit-form">
                     @csrf
-                    <input type="hidden" name="color_primary" value="{{ $event->color_primary }}">
-                    <input type="hidden" name="color_accent" value="{{ $event->color_accent }}">
-                    <input type="hidden" name="color_secondary" value="{{ $event->color_secondary }}">
-                    <input type="hidden" name="theme_character" value="{{ $event->theme_character }}">
-                    <input type="hidden" name="template" value="{{ $event->template ?? 'classic' }}">
+                    <input type="hidden" name="color_primary" id="form-color_primary" value="{{ $event->color_primary }}">
+                    <input type="hidden" name="color_accent" id="form-color_accent" value="{{ $event->color_accent }}">
+                    <input type="hidden" name="color_secondary" id="form-color_secondary" value="{{ $event->color_secondary }}">
+                    <input type="hidden" name="theme_character" id="form-theme_character" value="{{ $event->theme_character }}">
+                    <input type="hidden" name="template" id="form-template" value="{{ $event->template ?? 'classic' }}">
                     <input type="hidden" name="is_published" value="{{ $event->is_published ? '1' : '0' }}">
                     <input type="hidden" name="rsvp_button_text" value="Confirmar asistencia">
 
                     <div class="edit-grid">
                         <div class="edit-field">
                             <label>Emoji</label>
-                            <input type="text" name="emoji" maxlength="8" value="{{ $event->emoji }}" placeholder="🎂" style="text-align:center; font-size:1.3rem;">
+                            <input type="text" name="emoji" id="form-emoji" maxlength="8" value="{{ $event->emoji }}" placeholder="🎂" style="text-align:center; font-size:1.3rem;">
                         </div>
                         <div class="edit-field" style="flex:1;">
                             <label>Tipo de evento</label>
-                            <select name="event_type">
-                                <option value="babyshower"   @selected($event->event_type==='babyshower')>🍼 Baby Shower</option>
-                                <option value="cumple"       @selected($event->event_type==='cumple')>🎂 Cumpleaños</option>
-                                <option value="bautizo"      @selected($event->event_type==='bautizo')>🕊️ Bautizo</option>
-                                <option value="revelacion"   @selected($event->event_type==='revelacion')>🤰 Revelación de género</option>
-                                <option value="bienvenida"   @selected($event->event_type==='bienvenida')>🍼 Bienvenida</option>
-                                <option value="comunion"     @selected($event->event_type==='comunion')>🕯️ Comunión</option>
+                            <select name="event_type" id="form-event_type">
+                                <optgroup label="Bebés y niños">
+                                    <option value="babyshower"   @selected($event->event_type==='babyshower')>🍼 Baby Shower</option>
+                                    <option value="revelacion"   @selected($event->event_type==='revelacion')>🤰 Revelación de género</option>
+                                    <option value="bienvenida"   @selected($event->event_type==='bienvenida')>👶 Bienvenida</option>
+                                </optgroup>
+                                <optgroup label="Religiosos">
+                                    <option value="bautizo"      @selected($event->event_type==='bautizo')>🕊️ Bautizo</option>
+                                    <option value="comunion"     @selected($event->event_type==='comunion')>🕯️ Comunión</option>
+                                </optgroup>
+                                <optgroup label="Celebraciones">
+                                    <option value="cumple"       @selected($event->event_type==='cumple')>🎂 Cumpleaños</option>
+                                    <option value="quinceanero"  @selected($event->event_type==='quinceanero')>👑 Quinceañero / XV años</option>
+                                    <option value="boda"         @selected($event->event_type==='boda')>💍 Boda</option>
+                                    <option value="aniversario"  @selected($event->event_type==='aniversario')>💛 Aniversario</option>
+                                    <option value="graduacion"   @selected($event->event_type==='graduacion')>🎓 Graduación</option>
+                                    <option value="despedida"    @selected($event->event_type==='despedida')>🥂 Despedida de soltera/o</option>
+                                    <option value="general"      @selected($event->event_type==='general')>🎉 Evento general</option>
+                                </optgroup>
                             </select>
                         </div>
                     </div>
@@ -350,8 +537,13 @@
                     </div>
 
                     <div class="edit-field">
-                        <label>Subtítulo (opcional)</label>
-                        <textarea name="subtitle" rows="2" maxlength="200">{{ $event->subtitle }}</textarea>
+                        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                            <label style="margin:0;">Subtítulo (opcional)</label>
+                            <button type="button" class="btn-ai-inline" onclick="generateField('subtitle')" data-field-btn="subtitle">
+                                <span data-field-label="subtitle">✨ IA</span>
+                            </button>
+                        </div>
+                        <textarea name="subtitle" id="form-subtitle" rows="2" maxlength="200">{{ $event->subtitle }}</textarea>
                     </div>
 
                     <div class="edit-field">
@@ -360,80 +552,51 @@
                     </div>
 
                     <div class="edit-field">
-                        <label>Dirección / lugar</label>
-                        <input type="text" name="place" required maxlength="200" value="{{ $event->place }}" placeholder="Ej: Calle Los Sauces 123, Lima">
-                    </div>
-
-                    <div class="edit-grid">
-                        <div class="edit-field">
-                            <label>Latitud</label>
-                            <input type="number" name="lat" step="any" required value="{{ $event->lat }}" id="edit-lat">
-                        </div>
-                        <div class="edit-field">
-                            <label>Longitud</label>
-                            <input type="number" name="lng" step="any" required value="{{ $event->lng }}" id="edit-lng">
+                        <label>Dirección / lugar <small style="color:#8a7ba5; font-weight:500;">— escribí y elegí de la lista para ubicar en el mapa</small></label>
+                        <div class="place-search-wrap">
+                            <input type="text" name="place" id="edit-place" required maxlength="200" value="{{ $event->place }}" placeholder="Ej: Calle Los Sauces 123, Lima" autocomplete="off">
+                            <div class="place-search-status" id="edit-place-status"></div>
+                            <div class="place-search-results" id="edit-place-results"></div>
                         </div>
                     </div>
 
                     <div class="edit-field">
-                        <label>Ubicación en el mapa <small style="color:#8a7ba5;">— tocá para mover el pin</small></label>
-                        <div id="edit-map" style="height:200px; border-radius:12px; overflow:hidden; border:1px solid #e1ebf2;"></div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:5px;">
+                            <label style="margin:0;">Ubicación en el mapa <small style="color:#8a7ba5; font-weight:500;">— tocá para mover el pin</small></label>
+                            <button type="button" class="btn-mylocation" onclick="useMyLocation()" id="btn-mylocation">
+                                <span id="btn-mylocation-label">📍 Mi ubicación</span>
+                            </button>
+                        </div>
+                        <div id="edit-map" class="edit-map-expandable"></div>
+                        <div class="coords-row">
+                            <span class="coords-label">Coord.</span>
+                            <input type="number" name="lat" step="any" required value="{{ $event->lat }}" id="edit-lat" aria-label="Latitud" title="Latitud">
+                            <input type="number" name="lng" step="any" required value="{{ $event->lng }}" id="edit-lng" aria-label="Longitud" title="Longitud">
+                        </div>
                     </div>
 
                     <div class="edit-field">
-                        <label>Notas especiales (opcional)</label>
-                        <textarea name="extra_info" rows="3" maxlength="1000" placeholder="Vestimenta, lluvia de sobres, sugerencia de regalos…">{{ $event->extra_info }}</textarea>
+                        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                            <label style="margin:0;">Notas especiales (opcional)</label>
+                            <button type="button" class="btn-ai-inline" onclick="generateField('extra_info')" data-field-btn="extra_info">
+                                <span data-field-label="extra_info">✨ IA</span>
+                            </button>
+                        </div>
+                        <textarea name="extra_info" id="form-extra_info" rows="3" maxlength="1000" placeholder="Vestimenta, lluvia de sobres, sugerencia de regalos…">{{ $event->extra_info }}</textarea>
                     </div>
+
+                    <label class="toggle-row">
+                        <input type="checkbox" name="show_gallery" value="1" @checked($event->show_gallery)>
+                        <span>
+                            <strong>Galería de invitados</strong>
+                            <small>Permitir que los invitados suban fotos a la invitación</small>
+                        </span>
+                    </label>
 
                     <button type="submit" class="btn-save-form">💾 Guardar cambios</button>
                 </form>
             </div>
 
-            {{-- ASISTENTE IA (oculto por default, se abre con el botón) --}}
-            <div id="wizard-container" style="display:none;">
-            <div class="card" style="height: 470px; display: flex; flex-direction: column; padding: 0; overflow: hidden; position: relative; border-radius: 18px;">
-                <div class="card-title" style="margin: 0; padding: 12px 18px; background: #fff; border-bottom: 1.5px solid #eae3f7; display:flex; justify-content:space-between; align-items:center;">
-                    <span>Asistente de Configuración</span>
-                    <button type="button" onclick="toggleWizard()" style="background:transparent; border:none; color:#5a4e8c; cursor:pointer; font-size:1.2rem;">✕</button>
-                </div>
-                
-                {{-- Contenedor de mensajes --}}
-                <div id="wizard-chat-messages" style="flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #faf8ff;">
-                    <!-- Mensajes inyectados por JS -->
-                </div>
-                
-                {{-- Formulario oculto para el guardado final --}}
-                <form id="wizard-form" method="POST" action="{{ route('event.update') }}" style="display:none;">
-                    @csrf
-                    <input type="hidden" name="emoji" id="form-emoji" value="{{ $event->emoji }}">
-                    <input type="hidden" name="title" id="form-title" value="{{ $event->title }}">
-                    <input type="hidden" name="subtitle" id="form-subtitle" value="{{ $event->subtitle }}">
-                    <input type="hidden" name="date" id="form-date" value="{{ optional($event->date)->format('Y-m-d\TH:i') }}">
-                    <input type="hidden" name="place" id="form-place" value="{{ $event->place }}">
-                    <input type="hidden" name="lat" id="form-lat" value="{{ $event->lat }}">
-                    <input type="hidden" name="lng" id="form-lng" value="{{ $event->lng }}">
-                    <input type="hidden" name="color_primary" id="form-color_primary" value="{{ $event->color_primary }}">
-                    <input type="hidden" name="color_accent" id="form-color_accent" value="{{ $event->color_accent }}">
-                    <input type="hidden" name="color_secondary" id="form-color_secondary" value="{{ $event->color_secondary }}">
-                    <input type="hidden" name="extra_info" id="form-extra_info" value="{{ $event->extra_info }}">
-                    <input type="hidden" name="is_published" id="form-is_published" value="{{ $event->is_published ? '1' : '0' }}">
-                    <input type="hidden" name="theme_character" id="form-theme_character" value="{{ $event->theme_character }}">
-                    <input type="hidden" name="template" id="form-template" value="{{ $event->template ?? 'classic' }}">
-                    <input type="hidden" name="event_type" id="form-event_type" value="{{ $event->event_type }}">
-                    
-                    {{-- Compatibilidad --}}
-                    <input type="hidden" name="rsvp_button_text" value="Confirmar asistencia">
-                    <input type="hidden" name="share_message" value="">
-                    <input type="hidden" name="dress_code" value="">
-                    <input type="hidden" name="gift_info" value="">
-                </form>
-
-                {{-- Inputs dinámicos --}}
-                <div id="wizard-input-area" style="padding: 10px 14px; background: #fff; border-top: 1.5px solid #eae3f7; display: flex; flex-direction: column; gap: 8px; z-index: 10;">
-                    <!-- Renderizado dinámico en JS -->
-                </div>
-            </div>
-            </div>{{-- fin #wizard-container --}}
         </div>
 
         {{-- COLUMNA DERECHA: ENLACE COMPARTIR + INVITADOS --}}
@@ -623,496 +786,124 @@
                 </div>
             </div>
 
-            {{-- Tabla de Invitados (compacta) --}}
+            {{-- Galería de invitados --}}
             <div class="card" style="padding:14px 16px;">
-                <div class="card-title" style="margin-bottom:8px;">Lista de confirmados</div>
-                <div class="table-container" style="max-height:320px; overflow:auto;">
-                    <table style="font-size:0.78rem;">
-                        <thead>
-                            <tr>
-                                <th style="padding:6px 8px;">Invitado</th>
-                                <th style="padding:6px 8px; text-align:center;">Asiste</th>
-                                <th style="padding:6px 8px; text-align:center;">Ac.</th>
-                                <th style="padding:6px 8px;">Mensaje</th>
-                                <th style="padding:6px 4px;"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($guests as $g)
-                                <tr>
-                                    <td style="padding:6px 8px;"><strong>{{ $g->name }}</strong></td>
-                                    <td style="padding:6px 8px; text-align:center;" class="{{ $g->attending ? 'yes' : 'no' }}">{{ $g->attending ? 'Sí' : 'No' }}</td>
-                                    <td style="padding:6px 8px; text-align:center;">{{ $g->companions }}</td>
-                                    <td style="padding:6px 8px; max-width:120px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ $g->message }}">{{ $g->message ?: '—' }}</td>
-                                    <td style="padding:6px 4px;">
-                                        <form method="POST" action="{{ route('guest.delete',$g) }}" onsubmit="return confirm('¿Eliminar a {{ $g->name }}?')">
-                                            @csrf @method('DELETE')
-                                            <button class="btn-sm" title="Eliminar" style="padding:4px;">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr><td colspan="5" style="text-align:center;padding:16px;color:#8a7ba5; font-size:0.8rem;">Aún no hay confirmaciones.</td></tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <div class="card-title" style="margin:0;">Galería de invitados</div>
+                    <span style="font-size:0.7rem; color:#8a7ba5;">{{ $galleryPhotos->count() }} foto{{ $galleryPhotos->count() === 1 ? '' : 's' }}</span>
                 </div>
+                @if(!$event->show_gallery)
+                    <div class="admin-gallery-empty">Activá "Galería de invitados" en el formulario para permitir subidas.</div>
+                @elseif($galleryPhotos->isEmpty())
+                    <div class="admin-gallery-empty">Aún nadie subió fotos. Compartí el enlace de la invitación.</div>
+                @else
+                    <div class="admin-gallery-grid">
+                        @foreach($galleryPhotos as $photo)
+                            <div class="admin-gallery-item" title="Subida por {{ $photo->guest_name }}">
+                                <img src="{{ asset($photo->path) }}" alt="Foto de {{ $photo->guest_name }}" loading="lazy">
+                                <div class="name-tag">{{ $photo->guest_name }}</div>
+                                <form method="POST" action="{{ route('gallery.delete', $photo) }}" style="margin:0;" onsubmit="return confirm('¿Eliminar esta foto de {{ $photo->guest_name }}?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="del-btn" title="Eliminar foto">×</button>
+                                </form>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
             </div>
+
         </div>
 
     </div>
 
+    {{-- Tabla de Invitados (ancho completo) --}}
+    <div class="card" style="padding:14px 16px;">
+        <div class="card-title" style="margin-bottom:8px;">Lista de confirmados</div>
+        <div class="table-container" style="max-height:420px; overflow:auto;">
+            <table style="font-size:0.82rem;">
+                <thead>
+                    <tr>
+                        <th style="padding:6px 8px;">Invitado</th>
+                        <th style="padding:6px 8px; text-align:center;">Asiste</th>
+                        <th style="padding:6px 8px; text-align:center;">Ac.</th>
+                        <th style="padding:6px 8px;">Mensaje</th>
+                        <th style="padding:6px 4px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($guests as $g)
+                        <tr>
+                            <td style="padding:6px 8px; white-space:nowrap;"><strong>{{ $g->name }}</strong></td>
+                            <td style="padding:6px 8px; text-align:center;" class="{{ $g->attending ? 'yes' : 'no' }}">{{ $g->attending ? 'Sí' : 'No' }}</td>
+                            <td style="padding:6px 8px; text-align:center;">{{ $g->companions }}</td>
+                            <td style="padding:6px 8px; word-wrap:break-word; overflow-wrap:break-word; white-space:normal; line-height:1.4;">{{ $g->message ?: '—' }}</td>
+                            <td style="padding:6px 4px;">
+                                <form method="POST" action="{{ route('guest.delete',$g) }}" onsubmit="return confirm('¿Eliminar a {{ $g->name }}?')">
+                                    @csrf @method('DELETE')
+                                    <button class="btn-sm" title="Eliminar" style="padding:4px;">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="5" style="text-align:center;padding:16px;color:#8a7ba5; font-size:0.8rem;">Aún no hay confirmaciones.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <script>
-        // Objeto global de estado de la configuración conversacional
-        let wizardData = {
-            emoji: @json($event->emoji),
-            title: @json($event->title),
-            subtitle: @json($event->subtitle),
-            date: @json(optional($event->date)->format('Y-m-d\TH:i')),
-            place: @json($event->place),
-            lat: parseFloat("{{ $event->lat ?? -13.516799 }}".replace(',', '.')),
-            lng: parseFloat("{{ $event->lng ?? -71.978817 }}".replace(',', '.')),
-            color_primary: @json($event->color_primary),
-            color_accent: @json($event->color_accent),
-            color_secondary: @json($event->color_secondary),
-            extra_info: @json($event->extra_info),
-            is_published: {{ $event->is_published ? 'true' : 'false' }},
-            theme_character: @json($event->theme_character ?: 'none'),
-            event_type: @json($event->event_type ?: 'cumple')
-        };
 
-        let activePreset = 'babyshower';
+        // === Generación por campo con IA ===
+        const FIELD_TARGETS = { subtitle: 'form-subtitle', extra_info: 'form-extra_info' };
 
-        // Inicializar el chat con bienvenida
-        window.addEventListener('DOMContentLoaded', () => {
-            appendBotMessage("¡Hola! Soy tu asistente de eventos. Vamos a configurar la invitación de tu fiesta juntos.");
-            appendBotMessage("Actualmente tienes guardado el evento: <strong>{{ $event->title ?: 'Sin título' }}</strong>.<br><br>¿Qué prefieres hacer?");
-            renderWelcomeOptions();
-        });
+        async function generateField(field) {
+            const btn   = document.querySelector('[data-field-btn="' + field + '"]');
+            const label = document.querySelector('[data-field-label="' + field + '"]');
+            const target = document.getElementById(FIELD_TARGETS[field]);
+            if (!btn || !label || !target) return;
 
-        // Auxiliares de chat
-        function appendBotMessage(text) {
-            const container = document.getElementById('wizard-chat-messages');
-            const msg = document.createElement('div');
-            msg.className = 'wizard-msg bot';
-            msg.innerHTML = text;
-            container.appendChild(msg);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function appendUserMessage(text) {
-            const container = document.getElementById('wizard-chat-messages');
-            const msg = document.createElement('div');
-            msg.className = 'wizard-msg user';
-            msg.textContent = text;
-            container.appendChild(msg);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        // Paso 1: Bienvenida
-        function renderWelcomeOptions() {
-            const inputArea = document.getElementById('wizard-input-area');
-            inputArea.innerHTML = `
-                <div style="display:flex; gap:10px; width:100%;">
-                    <button type="button" class="btn" style="flex:1; margin:0; background:#eae3f7; color:#6e5a63; box-shadow:none;" onclick="startWizard(false)">Empezar de Cero</button>
-                    <button type="button" class="btn" style="flex:1; margin:0; background:#d4a3b3; color:#fff;" onclick="startWizard(true)">Editar Evento Actual</button>
-                </div>
-            `;
-        }
-
-        function startWizard(keepCurrent) {
-            if (!keepCurrent) {
-                wizardData = {
-                    emoji: '👶',
-                    title: 'Mi Baby Shower',
-                    subtitle: 'Te invitamos a celebrar con nosotros',
-                    date: '',
-                    place: 'Cusco, Perú',
-                    lat: -13.516799,
-                    lng: -71.978817,
-                    color_primary: '#d4a3b3',
-                    color_accent: '#e5c1cd',
-                    color_secondary: '#6e5a63',
-                    extra_info: '',
-                    is_published: false,
-                    theme_character: 'none'
-                };
-                appendUserMessage("Quiero configurar un evento desde cero.");
-            } else {
-                appendUserMessage("Quiero modificar los datos de mi evento actual.");
-            }
-            
-            appendBotMessage("Excelente. ¿De qué tipo será la fiesta que vas a celebrar?");
-            renderEventTypeOptions();
-        }
-
-        // Paso 2: Tipo de Evento
-        function renderEventTypeOptions() {
-            const inputArea = document.getElementById('wizard-input-area');
-            inputArea.innerHTML = `
-                <div style="display:flex; gap:8px; flex-wrap:wrap; width:100%;">
-                    <button type="button" class="tag-btn" onclick="selectEventType('babyshower', '🍼 Baby Shower', '👶')">🍼 Baby Shower</button>
-                    <button type="button" class="tag-btn" onclick="selectEventType('cumple', '🎂 Cumpleaños', '🎂')">🎂 Cumpleaños</button>
-                    <button type="button" class="tag-btn" onclick="selectEventType('bautizo', '🕊️ Bautizo', '🕊️')">🕊️ Bautizo</button>
-                    <button type="button" class="tag-btn" onclick="selectEventType('revelacion', '🤰 Revelación de Sexo', '🤰')">🤰 Revelación</button>
-                    <button type="button" class="tag-btn" onclick="selectEventType('bienvenida', '🍼 Bienvenida', '🍼')">🍼 Bienvenida</button>
-                    <button type="button" class="tag-btn" onclick="selectEventType('comunion', '🕯️ Comunión', '🕯️')">🕯️ Comunión</button>
-                </div>
-            `;
-        }
-
-        function selectEventType(presetName, labelText, emoji) {
-            activePreset = presetName;
-            wizardData.emoji = emoji;
-            wizardData.event_type = presetName;
-            
-            // Sugerir títulos por defecto si fue borrado o es nuevo
-            if (wizardData.title === 'Mi Baby Shower' || !wizardData.title) {
-                if (presetName === 'cumple') wizardData.title = '¡Mi Cumpleaños!';
-                else if (presetName === 'bautizo') wizardData.title = 'Mi Bautizo';
-                else if (presetName === 'revelacion') wizardData.title = 'Revelación de Sexo';
-                else if (presetName === 'bienvenida') wizardData.title = 'Bienvenida al Bebé';
-                else if (presetName === 'comunion') wizardData.title = 'Mi Primera Comunión';
-            }
-            
-            appendUserMessage("Será un: " + labelText);
-            appendBotMessage("¡Fantástico! Guardé el tipo de evento y el emoji.<br><br>¿Qué título te gustaría ponerle a la invitación?");
-            renderTitleOptions();
-        }
-
-        // Paso 3: Título
-        function renderTitleOptions() {
-            const inputArea = document.getElementById('wizard-input-area');
-            const suggest = wizardData.title || 'Mi Fiesta Especial';
-            inputArea.innerHTML = `
-                <div style="display:flex; gap:8px; width:100%;">
-                    <input type="text" id="wizard-text-input" value="${suggest}" placeholder="Escribe el título aquí..." style="flex:1;">
-                    <button type="button" class="btn" style="margin:0; padding:10px 20px;" onclick="submitTitle()">Confirmar</button>
-                </div>
-                <button type="button" class="tag-btn" style="margin-top:6px; font-size:0.8rem; width:100%; text-align:center;" onclick="useSuggestedTitle('${suggest}')">Usar sugerencia: ${suggest}</button>
-            `;
-            document.getElementById('wizard-text-input').focus();
-        }
-
-        function useSuggestedTitle(title) {
-            submitTitleValue(title);
-        }
-
-        function submitTitle() {
-            const val = document.getElementById('wizard-text-input').value.trim();
-            if (!val) {
-                alert("Por favor escribe un título.");
-                return;
-            }
-            submitTitleValue(val);
-        }
-
-        function submitTitleValue(val) {
-            wizardData.title = val;
-            appendUserMessage("Título: " + val);
-            appendBotMessage("Perfecto. Ahora, ¿cuál será el subtítulo de la invitación? O puedes pedirme que redacte uno creativo con IA.");
-            renderSubtitleOptions();
-        }
-
-        // Paso 4: Subtítulo
-        function renderSubtitleOptions() {
-            const inputArea = document.getElementById('wizard-input-area');
-            const currentSub = wizardData.subtitle || '';
-            inputArea.innerHTML = `
-                <div style="display:flex; gap:8px; width:100%;">
-                    <input type="text" id="wizard-text-input" value="${currentSub}" placeholder="Escribe el subtítulo..." style="flex:1;">
-                    <button type="button" id="ai-btn" class="btn" style="margin:0; padding:10px 18px; background:#7c4dff;" onclick="generateAIForWizard('subtitle')">✨ IA</button>
-                    <button type="button" class="btn" style="margin:0; padding:10px 20px;" onclick="submitSubtitle()">Enviar</button>
-                </div>
-                <button type="button" class="tag-btn" style="margin-top:6px; font-size:0.8rem; width:100%;" onclick="skipSubtitle()">Omitir / Dejar vacío ➔</button>
-            `;
-            document.getElementById('wizard-text-input').focus();
-        }
-
-        async function generateAIForWizard(field) {
-            const btn = document.getElementById('ai-btn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = 'Generando...';
+            const original = label.textContent;
             btn.disabled = true;
-            
+            label.textContent = '✨ Generando...';
+
+            const eventType = document.getElementById('form-event_type').value || 'cumple';
+            const title = (document.querySelector('input[name="title"]')?.value || '').trim();
+
             try {
-                const response = await fetch('{{ route("ai.generate") }}', {
+                const res = await fetch('{{ route("ai.generate") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
                     },
-                    body: JSON.stringify({
-                        field: field,
-                        event_type: activePreset
-                    })
+                    body: JSON.stringify({ field, event_type: eventType, title }),
                 });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.text) {
-                        document.getElementById('wizard-text-input').value = data.text;
-                    }
-                }
-            } catch(e) {
-                console.error(e);
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }
-        }
+                const data = res.ok ? await res.json() : { text: null, source: 'error' };
+                const text = (data.text || '').trim();
 
-        function submitSubtitle() {
-            const val = document.getElementById('wizard-text-input').value.trim();
-            wizardData.subtitle = val;
-            appendUserMessage("Subtítulo: " + (val || "(Sin subtítulo)"));
-            goToDateStep();
-        }
+                if (text) target.value = text;
 
-        function skipSubtitle() {
-            wizardData.subtitle = '';
-            appendUserMessage("Omitir subtítulo.");
-            goToDateStep();
-        }
-
-        function goToDateStep() {
-            appendBotMessage("Entendido.<br><br>¿Qué día y a qué hora se celebrará el evento?");
-            renderDateOptions();
-        }
-
-        // Paso 5: Fecha
-        function renderDateOptions() {
-            const inputArea = document.getElementById('wizard-input-area');
-            const currentVal = wizardData.date || '';
-            inputArea.innerHTML = `
-                <div style="display:flex; gap:8px; width:100%;">
-                    <input type="datetime-local" id="wizard-date-input" value="${currentVal}" style="flex:1;">
-                    <button type="button" class="btn" style="margin:0; padding:10px 20px;" onclick="submitDate()">Confirmar 📅</button>
-                </div>
-            `;
-        }
-
-        function submitDate() {
-            const val = document.getElementById('wizard-date-input').value;
-            if (!val) {
-                alert("Por favor selecciona una fecha y hora.");
-                return;
-            }
-            wizardData.date = val;
-            const formatted = new Date(val).toLocaleString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-            appendUserMessage("Fecha: " + formatted);
-            appendBotMessage("Guardado.<br><br>¿Dónde se llevará a cabo la celebración? Escribe el nombre del salón o dirección física.");
-            renderPlaceOptions();
-        }
-
-        // Paso 6: Dirección
-        function renderPlaceOptions() {
-            const inputArea = document.getElementById('wizard-input-area');
-            const currentVal = wizardData.place || '';
-            inputArea.innerHTML = `
-                <div style="display:flex; gap:8px; width:100%;">
-                    <input type="text" id="wizard-text-input" value="${currentVal}" placeholder="Ej: Salón Arcoíris, Av. Flores 123..." style="flex:1;">
-                    <button type="button" class="btn" style="margin:0; padding:10px 20px;" onclick="submitPlace()">Enviar</button>
-                </div>
-            `;
-            document.getElementById('wizard-text-input').focus();
-        }
-
-        function submitPlace() {
-            const val = document.getElementById('wizard-text-input').value.trim();
-            if (!val) {
-                alert("Por favor escribe una dirección.");
-                return;
-            }
-            wizardData.place = val;
-            appendUserMessage("Lugar: " + val);
-            appendBotMessage("¡Dirección registrada!<br><br>Ahora, verifiquemos la ubicación en el mapa. Puedes buscar direcciones exactas y mover el marcador del mapa para centrar el punto gps.");
-            renderMapOptions();
-        }
-
-        // Paso 7: Ubicación en Mapa (Leaflet inline)
-        function renderMapOptions() {
-            const inputArea = document.getElementById('wizard-input-area');
-            inputArea.innerHTML = `
-                <div style="display:flex; flex-direction:column; gap:8px; width:100%;">
-                    <div style="display:flex; gap:8px;">
-                        <input type="text" id="wizard-map-search" placeholder="Escribe una calle y presiona Enter..." style="flex:1;">
-                        <button type="button" class="btn" style="margin:0; padding:10px 16px; background:#7c4dff;" onclick="searchWizardMap()">Buscar</button>
-                    </div>
-                    <div id="picker" style="height:190px; width:100%; border-radius:12px; border:2px solid #eee;"></div>
-                    <div class="hint">Marcador GPS actual: <span id="coords">${wizardData.lat.toFixed(5)}, ${wizardData.lng.toFixed(5)}</span></div>
-                    <button type="button" class="btn" style="width:100%; margin-top:4px;" onclick="submitMapLocation()">Confirmar ubicación en el mapa 📍</button>
-                </div>
-            `;
-            
-            // Inicialización de mapa
-            setTimeout(() => {
-                const pickerEl = document.getElementById('picker');
-                if (!pickerEl) return;
-                
-                window.map = L.map('picker').setView([wizardData.lat, wizardData.lng], 14);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap'
-                }).addTo(window.map);
-                
-                window.marker = L.marker([wizardData.lat, wizardData.lng], { draggable: true }).addTo(window.map);
-                
-                window.map.on('click', e => {
-                    window.marker.setLatLng(e.latlng);
-                    updateWizardCoords(e.latlng.lat, e.latlng.lng);
-                });
-                
-                window.marker.on('dragend', e => {
-                    const p = e.target.getLatLng();
-                    updateWizardCoords(p.lat, p.lng);
-                });
-            }, 100);
-        }
-
-        function updateWizardCoords(lat, lng) {
-            wizardData.lat = lat;
-            wizardData.lng = lng;
-            const coordsEl = document.getElementById('coords');
-            if (coordsEl) coordsEl.textContent = lat.toFixed(5) + ', ' + lng.toFixed(5);
-        }
-
-        async function searchWizardMap() {
-            const q = document.getElementById('wizard-map-search').value.trim();
-            if (!q) return;
-            try {
-                const response = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(q));
-                const data = await response.json();
-                if (data[0]) {
-                    const la = parseFloat(data[0].lat);
-                    const ln = parseFloat(data[0].lon);
-                    window.map.setView([la, ln], 15);
-                    window.marker.setLatLng([la, ln]);
-                    updateWizardCoords(la, ln);
+                if (data.source === 'mock' && data.error) {
+                    const msgs = {
+                        cuota_excedida:    '⚠️ Cuota agotada',
+                        servicio_saturado: '⚠️ IA saturada',
+                        key_invalida:      '⚠️ Key inválida',
+                    };
+                    label.textContent = msgs[data.error] || '⚠️ Texto genérico';
+                } else if (text) {
+                    label.textContent = data.source === 'mock' ? '⚠️ Sin IA' : '✅ Listo';
                 } else {
-                    alert('No se encontró la dirección');
+                    label.textContent = '⚠️ Sin resultado';
                 }
-            } catch(e) {
-                console.error(e);
+                setTimeout(() => { label.textContent = original; btn.disabled = false; }, 2000);
+            } catch (e) {
+                label.textContent = '⚠️ Error';
+                setTimeout(() => { label.textContent = original; btn.disabled = false; }, 2000);
             }
-        }
-
-        function submitMapLocation() {
-            appendUserMessage("Ubicación GPS confirmada: " + wizardData.lat.toFixed(5) + ", " + wizardData.lng.toFixed(5));
-            if (window.map) {
-                window.map.remove();
-                window.map = null;
-            }
-            appendBotMessage("Ubicación guardada.<br><br>El estilo visual (colores, personaje y forma de la tarjeta) se elige desde la galería <b>“Elegí un modelo”</b> en la columna de la derecha. ¿Tienes alguna nota especial para tus invitados? (Ej: Vestimenta, lluvia de sobres, regalos… o pídemelo generar con IA).");
-            renderNotesOptions();
-        }
-
-        // Paso 9: Notas especiales
-        function renderNotesOptions() {
-            const inputArea = document.getElementById('wizard-input-area');
-            const currentNotes = wizardData.extra_info || '';
-            inputArea.innerHTML = `
-                <textarea id="wizard-textarea-input" rows="3" placeholder="Sugerencias de regalos, vestimenta..." style="width:100%;">${currentNotes}</textarea>
-                <div style="display:flex; gap:8px; width:100%; margin-top:6px;">
-                    <button type="button" id="ai-notes-btn" class="btn" style="flex:1; margin:0; background:#7c4dff;" onclick="generateNotesAIForWizard()">✨ Generar con IA</button>
-                    <button type="button" class="btn" style="flex:1; margin:0;" onclick="submitNotes()">Enviar</button>
-                </div>
-                <button type="button" class="tag-btn" style="margin-top:6px; font-size:0.8rem; width:100%;" onclick="skipNotes()">Omitir / Siguiente ➔</button>
-            `;
-            document.getElementById('wizard-textarea-input').focus();
-        }
-
-        async function generateNotesAIForWizard() {
-            const btn = document.getElementById('ai-notes-btn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = 'Generando...';
-            btn.disabled = true;
-            
-            try {
-                const response = await fetch('{{ route("ai.generate") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        field: 'extra_info',
-                        event_type: activePreset
-                    })
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.text) {
-                        document.getElementById('wizard-textarea-input').value = data.text;
-                    }
-                }
-            } catch(e) {
-                console.error(e);
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }
-        }
-
-        function submitNotes() {
-            const val = document.getElementById('wizard-textarea-input').value.trim();
-            wizardData.extra_info = val;
-            appendUserMessage("Notas Especiales: " + (val || "(Sin notas)"));
-            goToPublishStep();
-        }
-
-        function skipNotes() {
-            wizardData.extra_info = '';
-            appendUserMessage("Sin notas adicionales.");
-            goToPublishStep();
-        }
-
-        function goToPublishStep() {
-            appendBotMessage("¡Excelente! Hemos configurado todos los detalles del evento.<br><br>¿Deseas publicar la invitación ahora para que sea visible públicamente, o la mantenemos como Borrador?");
-            renderPublishOptions();
-        }
-
-        // Paso 10: Publicación y Guardado final
-        function renderPublishOptions() {
-            const inputArea = document.getElementById('wizard-input-area');
-            inputArea.innerHTML = `
-                <div style="display:flex; gap:8px; width:100%;">
-                    <button type="button" class="btn" style="flex:1; margin:0; background:#eae3f7; color:#6e5a63; box-shadow:none;" onclick="submitPublish(false)">Borrador</button>
-                    <button type="button" class="btn" style="flex:1; margin:0; background:#d4a3b3; color:#fff;" onclick="submitPublish(true)">Publicar</button>
-                </div>
-            `;
-        }
-
-        function submitPublish(isPublished) {
-            wizardData.is_published = isPublished;
-            appendUserMessage(isPublished ? "Guardar y publicar invitación" : "Guardar como borrador");
-            appendBotMessage("¡Configuración lista! Presiona el botón de abajo para confirmar y aplicar todos los cambios en tu invitación.");
-            
-            const inputArea = document.getElementById('wizard-input-area');
-            inputArea.innerHTML = `
-                <button type="button" class="btn" style="width:100%; padding:14px; font-size:1.1rem;" onclick="saveAllConfig()">Confirmar y Guardar Cambios</button>
-            `;
-        }
-
-        function saveAllConfig() {
-            document.getElementById('form-emoji').value = wizardData.emoji;
-            document.getElementById('form-title').value = wizardData.title;
-            document.getElementById('form-subtitle').value = wizardData.subtitle;
-            document.getElementById('form-date').value = wizardData.date;
-            document.getElementById('form-place').value = wizardData.place;
-            document.getElementById('form-lat').value = wizardData.lat;
-            document.getElementById('form-lng').value = wizardData.lng;
-            document.getElementById('form-color_primary').value = wizardData.color_primary;
-            document.getElementById('form-color_accent').value = wizardData.color_accent;
-            document.getElementById('form-color_secondary').value = wizardData.color_secondary;
-            document.getElementById('form-extra_info').value = wizardData.extra_info;
-            document.getElementById('form-is_published').value = wizardData.is_published ? '1' : '0';
-            document.getElementById('form-theme_character').value = wizardData.theme_character;
-            document.getElementById('form-event_type').value = wizardData.event_type;
-            
-            document.getElementById('wizard-form').submit();
         }
 
         // Copiar enlace al portapapeles
@@ -1139,6 +930,8 @@
             { id:'guerrero-z',    nombre:'Guerrero Z',  emoji:'🐉', character:'goku_nino',    template:'dragon',   color_primary:'#e88b3a', color_secondary:'#3a2b4d', color_accent:'#f4a5b8' },
             { id:'cumple-neon',   nombre:'Neón',        emoji:'🎉', character:'goku_nino',    template:'banner',   color_primary:'#8a4dff', color_secondary:'#2a0e5a', color_accent:'#c6ff5c' },
             { id:'crema-elegante',nombre:'Elegante',    emoji:'✨', character:'none',         template:'frame',    color_primary:'#c9a56a', color_secondary:'#5a4a2a', color_accent:'#f2e6cf' },
+            { id:'disco-neon',    nombre:'Disco neón',  emoji:'🕺', character:'none',         template:'disco',    color_primary:'#ff2d95', color_secondary:'#0a0a14', color_accent:'#00e5ff' },
+            { id:'neon-party',    nombre:'Neon party',  emoji:'😈', character:'emogimalo',    template:'neonparty',color_primary:'#ff1744', color_secondary:'#0a0000', color_accent:'#ff4d6d' },
         ];
 
         function renderPresets() {
@@ -1187,60 +980,276 @@
             if (!document.getElementById('form-emoji').value) {
                 document.getElementById('form-emoji').value = p.emoji;
             }
-            if (typeof wizardData !== 'undefined') {
-                wizardData.color_primary   = p.color_primary;
-                wizardData.color_secondary = p.color_secondary;
-                wizardData.color_accent    = p.color_accent;
-                wizardData.theme_character = p.character;
-                wizardData.template        = p.template;
-            }
-            document.getElementById('wizard-form').submit();
+            document.getElementById('edit-form').submit();
         }
 
         document.addEventListener('DOMContentLoaded', renderPresets);
 
-        // === Toggle Asistente IA ===
-        function toggleWizard(){
-            const box = document.getElementById('wizard-container');
-            if (!box) return;
-            const open = box.style.display === 'none' || box.style.display === '';
-            box.style.display = open ? 'block' : 'none';
-            if (open) box.scrollIntoView({ behavior:'smooth', block:'start' });
-        }
-
         // === Mapa Leaflet en formulario clásico ===
+        let editMap = null, editMarker = null;
+
         (function initEditMap(){
             const mapEl = document.getElementById('edit-map');
             if (!mapEl || typeof L === 'undefined') return;
             const latInput = document.getElementById('edit-lat');
             const lngInput = document.getElementById('edit-lng');
-            let lat = parseFloat(latInput.value) || -12.046374;
-            let lng = parseFloat(lngInput.value) || -77.042793;
+            const startLat = parseFloat(latInput.value) || -12.046374;
+            const startLng = parseFloat(lngInput.value) || -77.042793;
 
-            const map = L.map('edit-map').setView([lat, lng], 15);
+            editMap = L.map('edit-map').setView([startLat, startLng], 15);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution:'© OpenStreetMap', maxZoom:19,
-            }).addTo(map);
+            }).addTo(editMap);
 
-            const marker = L.marker([lat, lng], { draggable:true }).addTo(map);
+            editMarker = L.marker([startLat, startLng], { draggable:true }).addTo(editMap);
 
-            function updateInputs(newLat, newLng){
-                latInput.value = newLat.toFixed(6);
-                lngInput.value = newLng.toFixed(6);
+            editMarker.on('dragend', e => {
+                const p = e.target.getLatLng();
+                latInput.value = p.lat.toFixed(6);
+                lngInput.value = p.lng.toFixed(6);
+            });
+            editMap.on('click', e => {
+                editMarker.setLatLng(e.latlng);
+                latInput.value = e.latlng.lat.toFixed(6);
+                lngInput.value = e.latlng.lng.toFixed(6);
+            });
+
+            setTimeout(() => editMap.invalidateSize(), 250);
+
+            // Reajustar el mapa cuando el contenedor cambia de altura (hover / touch)
+            mapEl.addEventListener('transitionend', e => {
+                if (e.propertyName === 'height') editMap.invalidateSize();
+            });
+            // Soporte touch: primer tap expande, segundo permite mover el pin
+            mapEl.addEventListener('touchstart', () => {
+                if (!mapEl.classList.contains('expanded')) {
+                    mapEl.classList.add('expanded');
+                }
+            }, { passive: true });
+
+            // Auto-disparar geolocalización si el evento aún tiene las coords por defecto (Cusco)
+            const isDefault = Math.abs(startLat - (-13.516799)) < 0.0005
+                           && Math.abs(startLng - (-71.978817)) < 0.0005;
+            if (isDefault) {
+                setTimeout(useMyLocation, 800);
+            }
+        })();
+
+        // === Autocomplete de dirección (Nominatim / OpenStreetMap) ===
+        (function initPlaceSearch(){
+            const input   = document.getElementById('edit-place');
+            const results = document.getElementById('edit-place-results');
+            const status  = document.getElementById('edit-place-status');
+            if (!input || !results) return;
+
+            let timer = null;
+            let lastQuery = '';
+            let activeIdx = -1;
+            let items = [];
+
+            function clearResults() {
+                results.innerHTML = '';
+                results.classList.remove('open');
+                activeIdx = -1;
+                items = [];
             }
 
-            marker.on('dragend', e => {
-                const p = e.target.getLatLng();
-                updateInputs(p.lat, p.lng);
-            });
-            map.on('click', e => {
-                marker.setLatLng(e.latlng);
-                updateInputs(e.latlng.lat, e.latlng.lng);
+            function renderResults(hits) {
+                if (!hits.length) {
+                    results.innerHTML = '<div class="place-search-empty">Sin resultados</div>';
+                    results.classList.add('open');
+                    return;
+                }
+                items = hits;
+                results.innerHTML = hits.map((h, i) => {
+                    const parts = (h.display_name || '').split(',');
+                    const main = parts[0]?.trim() || h.display_name;
+                    const sub  = parts.slice(1, 4).join(',').trim();
+                    const badge = h.__nearby ? '<span class="place-badge">cerca</span>' : '';
+                    return `<div class="place-search-item" data-idx="${i}" onclick="selectPlace(${i})">
+                        <span class="icon">📍</span>
+                        <div style="flex:1; min-width:0;">
+                            <div class="main">${escapeHtml(main)} ${badge}</div>
+                            ${sub ? `<div class="sub">${escapeHtml(sub)}</div>` : ''}
+                        </div>
+                    </div>`;
+                }).join('');
+                results.classList.add('open');
+            }
+
+            function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+            function currentCenter() {
+                if (editMarker) {
+                    const p = editMarker.getLatLng();
+                    return { lat: p.lat, lng: p.lng };
+                }
+                const lat = parseFloat(document.getElementById('edit-lat').value);
+                const lng = parseFloat(document.getElementById('edit-lng').value);
+                return isNaN(lat) || isNaN(lng) ? null : { lat, lng };
+            }
+
+            let lastQueryText = '';
+            async function search(q, { forceGlobal = false } = {}) {
+                lastQueryText = q;
+                status.textContent = 'buscando...';
+                try {
+                    const c = currentCenter();
+                    let extra = '';
+                    // Por defecto restringimos a un viewbox alrededor del pin (~90 km de lado).
+                    if (c && !forceGlobal) {
+                        const d = 0.8;
+                        extra = `&viewbox=${c.lng - d},${c.lat + d},${c.lng + d},${c.lat - d}&bounded=1`;
+                    }
+                    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=6&accept-language=es&addressdetails=1${extra}&q=${encodeURIComponent(q)}`;
+                    const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+                    status.textContent = '';
+                    if (!r.ok) { clearResults(); return; }
+                    const data = await r.json();
+
+                    if (!Array.isArray(data) || data.length === 0) {
+                        if (!forceGlobal && c) {
+                            renderEmptyWithGlobal();
+                        } else {
+                            renderResults([]);
+                        }
+                        return;
+                    }
+
+                    if (c) {
+                        data.forEach(h => {
+                            const dLat = parseFloat(h.lat) - c.lat;
+                            const dLng = parseFloat(h.lon) - c.lng;
+                            h.__dist = Math.sqrt(dLat*dLat + dLng*dLng);
+                            h.__nearby = !forceGlobal;
+                        });
+                        data.sort((a, b) => a.__dist - b.__dist);
+                    }
+                    renderResults(data);
+                } catch (e) {
+                    status.textContent = '';
+                    clearResults();
+                }
+            }
+
+            function renderEmptyWithGlobal() {
+                items = [];
+                results.innerHTML = `
+                    <div class="place-search-empty">Sin resultados cerca de tu ubicación</div>
+                    <button type="button" class="place-search-global" onclick="searchGlobalPlace()">🌎 Buscar en cualquier lugar</button>
+                `;
+                results.classList.add('open');
+            }
+
+            window.searchGlobalPlace = function() {
+                if (lastQueryText) search(lastQueryText, { forceGlobal: true });
+            };
+
+            input.addEventListener('input', () => {
+                const q = input.value.trim();
+                if (q.length < 3) { clearResults(); status.textContent = ''; return; }
+                if (q === lastQuery) return;
+                lastQuery = q;
+                clearTimeout(timer);
+                timer = setTimeout(() => search(q), 450);
             });
 
-            // Recalcular tamaño cuando la card entra en viewport (fix leaflet dentro de flex/hidden)
-            setTimeout(() => map.invalidateSize(), 250);
+            input.addEventListener('keydown', e => {
+                if (!results.classList.contains('open') || items.length === 0) return;
+                if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = (activeIdx + 1) % items.length; highlight(); }
+                else if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = (activeIdx - 1 + items.length) % items.length; highlight(); }
+                else if (e.key === 'Enter' && activeIdx >= 0) { e.preventDefault(); selectPlace(activeIdx); }
+                else if (e.key === 'Escape') { clearResults(); }
+            });
+
+            function highlight() {
+                results.querySelectorAll('.place-search-item').forEach((el, i) => {
+                    el.classList.toggle('active', i === activeIdx);
+                });
+            }
+
+            // Cerrar al hacer click fuera
+            document.addEventListener('click', e => {
+                if (!input.contains(e.target) && !results.contains(e.target)) clearResults();
+            });
+
+            // Exponer selectPlace globalmente
+            window.selectPlace = function(idx) {
+                const it = items[idx];
+                if (!it) return;
+                const lat = parseFloat(it.lat);
+                const lng = parseFloat(it.lon);
+                if (isNaN(lat) || isNaN(lng)) return;
+
+                // Actualizar campo con nombre acortado
+                const parts = (it.display_name || '').split(',').slice(0, 3);
+                input.value = parts.join(',').trim();
+                lastQuery = input.value;
+
+                // Actualizar mapa + coords
+                if (editMap && editMarker) {
+                    editMap.setView([lat, lng], 16);
+                    editMarker.setLatLng([lat, lng]);
+                }
+                document.getElementById('edit-lat').value = lat.toFixed(6);
+                document.getElementById('edit-lng').value = lng.toFixed(6);
+                clearResults();
+            };
         })();
+
+        // Función global: usar mi ubicación actual
+        function useMyLocation() {
+            const btn   = document.getElementById('btn-mylocation');
+            const label = document.getElementById('btn-mylocation-label');
+            if (!navigator.geolocation) {
+                label.textContent = '⚠️ No disponible';
+                setTimeout(() => label.textContent = '📍 Mi ubicación', 2000);
+                return;
+            }
+            btn.disabled = true;
+            label.textContent = '📡 Ubicando...';
+
+            navigator.geolocation.getCurrentPosition(
+                async pos => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    if (editMap && editMarker) {
+                        editMap.setView([lat, lng], 16);
+                        editMarker.setLatLng([lat, lng]);
+                    }
+                    document.getElementById('edit-lat').value = lat.toFixed(6);
+                    document.getElementById('edit-lng').value = lng.toFixed(6);
+                    label.textContent = '✅ Ubicación fijada';
+
+                    // Reverse geocoding: llenar el campo "lugar" si está vacío o con el default
+                    try {
+                        const placeInput = document.querySelector('input[name="place"]');
+                        const currentPlace = placeInput?.value?.trim() || '';
+                        if (placeInput && (currentPlace === '' || currentPlace === 'Cusco, Perú')) {
+                            const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=es`, {
+                                headers: { 'Accept': 'application/json' }
+                            });
+                            if (r.ok) {
+                                const d = await r.json();
+                                if (d.display_name) placeInput.value = d.display_name.split(',').slice(0,3).join(',').trim();
+                            }
+                        }
+                    } catch (e) { /* silencioso */ }
+
+                    setTimeout(() => { label.textContent = '📍 Mi ubicación'; btn.disabled = false; }, 2500);
+                },
+                err => {
+                    const msgs = {
+                        1: '⚠️ Permiso denegado',
+                        2: '⚠️ No se pudo obtener',
+                        3: '⚠️ Tardó demasiado',
+                    };
+                    label.textContent = msgs[err.code] || '⚠️ Error';
+                    setTimeout(() => { label.textContent = '📍 Mi ubicación'; btn.disabled = false; }, 2500);
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+            );
+        }
 
         // === Buscador de imágenes de revelación ===
         let revealCurrentSlot = null;

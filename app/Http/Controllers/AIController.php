@@ -13,49 +13,77 @@ class AIController extends Controller
         $request->validate([
             'field' => 'required|string|in:subtitle,extra_info',
             'event_type' => 'required|string',
+            'title' => 'nullable|string|max:200',
         ]);
 
         $field = $request->input('field');
         $eventType = $request->input('event_type');
+        $title = trim((string) $request->input('title', ''));
         $apiKey = env('GEMINI_API_KEY');
 
         if (empty($apiKey)) {
             return response()->json([
-                'text' => $this->getMockGeneration($field, $eventType)
+                'text' => $this->getMockGeneration($field, $eventType),
+                'source' => 'mock',
             ]);
         }
 
         $fieldNames = [
-            'subtitle' => 'subtítulo corto y acogedor',
-            'extra_info' => 'sección de notas especiales (con detalles creativos sobre código de vestimenta, sugerencia de regalos y notas adicionales)'
+            'subtitle' => 'subtítulo corto y acogedor (máximo 12 palabras)',
+            'extra_info' => 'nota especial breve (2 o 3 líneas cortas) que mencione vestimenta y regalos de forma directa, sin adornos ni párrafos largos',
         ];
+        $seed = substr(bin2hex(random_bytes(3)), 0, 6);
+        $titleLine = $title !== ''
+            ? "El título específico del evento es: \"{$title}\". Ajustá el texto para que sea coherente con ese título (usá los nombres, edades o detalles que aparezcan). "
+            : '';
         $prompt = "Genera un texto para el campo '" . $fieldNames[$field] . "' de una invitación de tipo '" . $eventType . "'. "
+                . $titleLine
+                . "Debe sonar único y original, EVITA frases genéricas típicas de plantillas. "
+                . "Sé creativo con las palabras, imágenes y ritmo — nunca repitas la misma idea entre variantes (semilla: {$seed}). "
                 . "Devuelve exclusivamente el texto generado, sin explicaciones ni comillas, en un tono alegre, tierno y elegante. "
-                . "REQUISITO CRÍTICO: No utilices emojis, iconos ni ningún símbolo decorativo visual (por ejemplo, nada de 🕊️, 🎁, ✨, 🌸, 🎂, etc.). Solo texto limpio.";
+                . "REQUISITO CRÍTICO: No utilices emojis, iconos ni ningún símbolo decorativo visual. Solo texto limpio.";
 
         try {
-            $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $apiKey, [
-                'contents' => [
-                    [
-                        'parts' => [
-                            ['text' => $prompt]
-                        ]
-                    ]
+            $response = Http::timeout(30)->post(
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=" . $apiKey,
+                [
+                    'contents' => [
+                        ['parts' => [['text' => $prompt]]]
+                    ],
+                    'generationConfig' => [
+                        'temperature' => 1.1,
+                        'topP' => 0.95,
+                    ],
                 ]
-            ]);
+            );
 
             if ($response->successful()) {
                 $data = $response->json();
                 $generatedText = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
-                return response()->json(['text' => trim($generatedText)]);
+                if (trim($generatedText) !== '') {
+                    return response()->json(['text' => trim($generatedText), 'source' => 'ai']);
+                }
             }
-        } catch (\Exception $e) {
-            // Silently fall back to mock on API exception
-        }
 
-        return response()->json([
-            'text' => $this->getMockGeneration($field, $eventType)
-        ]);
+            $status = $response->status();
+            $errorReason = match (true) {
+                $status === 429 => 'cuota_excedida',
+                $status === 503 => 'servicio_saturado',
+                $status === 401 || $status === 403 => 'key_invalida',
+                default => 'error_api_' . $status,
+            };
+            return response()->json([
+                'text' => $this->getMockGeneration($field, $eventType),
+                'source' => 'mock',
+                'error' => $errorReason,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'text' => $this->getMockGeneration($field, $eventType),
+                'source' => 'mock',
+                'error' => 'excepcion',
+            ]);
+        }
     }
 
     public function chat(Request $request)
@@ -91,16 +119,19 @@ class AIController extends Controller
                            . "REQUISITO CRÍTICO: No utilices emojis ni iconos gráficos en tus respuestas. Responde directamente al mensaje del invitado.";
 
         try {
-            $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $apiKey, [
-                'contents' => [
-                    [
-                        'role' => 'user',
-                        'parts' => [
-                            ['text' => "Instrucciones de Contexto:\n" . $systemInstruction . "\n\nMensaje del Invitado:\n" . $userMessage]
+            $response = Http::timeout(30)->post(
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=" . $apiKey,
+                [
+                    'contents' => [
+                        [
+                            'role' => 'user',
+                            'parts' => [
+                                ['text' => "Instrucciones de Contexto:\n" . $systemInstruction . "\n\nMensaje del Invitado:\n" . $userMessage]
+                            ]
                         ]
                     ]
                 ]
-            ]);
+            );
 
             if ($response->successful()) {
                 $data = $response->json();
@@ -121,28 +152,52 @@ class AIController extends Controller
         $presets = [
             'babyshower' => [
                 'subtitle' => 'Un nuevo capítulo de amor y pañales está por comenzar',
-                'extra_info' => "Vestimenta: Colores pastel.\nSugerencia de regalo: Lluvia de sobres.\nNotas: Tendremos una hermosa mesa de postres y divertidos juegos para celebrar.",
+                'extra_info' => "Vestimenta: Colores pastel.\nRegalos: Lluvia de sobres.",
             ],
             'cumple' => [
                 'subtitle' => '¡Celebrando un año más de risas, aventuras y momentos mágicos!',
-                'extra_info' => "Vestimenta: Casual.\nRegalos: ¡Tu presencia! Pero si quieres tener un detalle, un obsequio libre será fantástico.\nNotas: Ven con hambre de pastel.",
+                'extra_info' => "Vestimenta: Casual.\nRegalos: Tu presencia, y si querés, un detalle libre.",
             ],
             'bautizo' => [
                 'subtitle' => 'Acompáñanos a celebrar el Sacramento del Bautizo',
-                'extra_info' => "Vestimenta: Semiformal.\nDetalle: Lluvia de sobres.\nNotas: Después de la ceremonia religiosa, compartiremos un almuerzo familiar.",
+                'extra_info' => "Vestimenta: Semiformal.\nRegalos: Lluvia de sobres.",
             ],
             'revelacion' => [
                 'subtitle' => '¿Rosa o Celeste? ¡Ven a descubrir el gran secreto con nosotros!',
-                'extra_info' => "Vestimenta: Ven vestido de Rosa si crees que es niña, o de Celeste si crees que es niño.\nRegalos: Pañales o ropita neutra.\nDetalles: La revelación se hará a las 5:00 PM.",
+                'extra_info' => "Vestimenta: Rosa si crees niña, celeste si crees niño.\nRegalos: Pañales o ropita neutra.",
             ],
             'bienvenida' => [
                 'subtitle' => '¡Hola mundo! Ya estoy aquí y mis papis quieren presentarte',
-                'extra_info' => "Medida especial: Agradecemos evitar visitarme si tienes algún malestar.\nRegalos: Ropa de 3 meses en adelante o pañales.\nNotas: Ven a darme amor.",
+                'extra_info' => "Vestimenta: Libre.\nRegalos: Pañales o ropita de 3 meses en adelante.",
             ],
             'comunion' => [
                 'subtitle' => 'Mi Primera Comunión: Un paso importante en mi fe y camino espiritual',
-                'extra_info' => "Vestimenta: Formal / Respetuosa.\nSugerencia: Muestra de cariño libre.\nNotas: Agradecemos confirmar tu asistencia para organizar la recepción.",
-            ]
+                'extra_info' => "Vestimenta: Formal.\nRegalos: Muestra de cariño libre.",
+            ],
+            'boda' => [
+                'subtitle' => 'Dos vidas, una historia. Nos casamos y queremos que estés con nosotros.',
+                'extra_info' => "Vestimenta: Etiqueta / Formal.\nRegalos: Lluvia de sobres.",
+            ],
+            'quinceanero' => [
+                'subtitle' => '¡Estoy cumpliendo 15! Ven a celebrar esta noche mágica conmigo.',
+                'extra_info' => "Vestimenta: Elegante de noche.\nRegalos: Sugerencia libre.",
+            ],
+            'graduacion' => [
+                'subtitle' => 'Terminó una etapa y quiero celebrarlo contigo. ¡Me gradué!',
+                'extra_info' => "Vestimenta: Semiformal.\nRegalos: A tu gusto.",
+            ],
+            'aniversario' => [
+                'subtitle' => 'Un año más juntos vale una celebración. Acompáñanos a brindar.',
+                'extra_info' => "Vestimenta: Elegante.\nRegalos: Tu compañía es lo más importante.",
+            ],
+            'despedida' => [
+                'subtitle' => '¡Última noche de soltería! Ven a despedir esta etapa conmigo.',
+                'extra_info' => "Vestimenta: Divertida / Temática.\nRegalos: Sorpresas bienvenidas.",
+            ],
+            'general' => [
+                'subtitle' => 'Te invito a compartir un momento especial conmigo.',
+                'extra_info' => "Vestimenta: Casual.\nRegalos: A tu criterio.",
+            ],
         ];
 
         return $presets[$eventType][$field] ?? '¡Te esperamos en nuestro gran día!';

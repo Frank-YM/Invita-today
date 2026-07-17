@@ -17,7 +17,11 @@
             --p4:#33d9b2; --p5:#ffe066;
             
             /* Dynamic Sky Background based on primary color theme */
-            @if($event->color_primary == '#d4a3b3' || !$event->color_primary)
+            @if(($event->template ?? '') === 'disco')
+                --bg-sky: #0a0a14;
+            @elseif(($event->template ?? '') === 'neonparty')
+                --bg-sky: #0a0000;
+            @elseif($event->color_primary == '#d4a3b3' || !$event->color_primary)
                 --bg-sky: #fcf3f5;
             @elseif($event->color_primary == '#9fb8c7')
                 --bg-sky: #f0f5f8;
@@ -169,10 +173,159 @@
             font-weight:bold;animation:pop .5s}
         .err{color:#e63946;font-size:.85rem;margin-top:4px}
 
-        .msgs{margin-top:32px}
-        .msgs h3{color:var(--p3);margin-bottom:12px}
-        .msg{background:rgba(255,255,255,.8);border-radius:16px;padding:12px 16px;margin-bottom:10px;text-align:left}
+        .msgs{
+            margin-top:32px;
+            width:100vw;
+            position:relative;
+            left:50%;
+            right:50%;
+            margin-left:-50vw;
+            margin-right:-50vw;
+            padding:24px 16px;
+            box-sizing:border-box;
+        }
+        .msgs h3{color:var(--p3);margin-bottom:12px;text-align:center}
+        .msgs-list{max-width:760px;margin:0 auto}
+        .msg{background:rgba(255,255,255,.8);border-radius:16px;padding:12px 16px;margin-bottom:10px;text-align:left;word-wrap:break-word;overflow-wrap:break-word}
         .msg b{color:var(--p1)}
+
+        /* ===== Galería de invitados (álbum minimalista) ===== */
+        .gallery { margin-top:48px; padding-top:32px; border-top:1px solid rgba(0,0,0,0.06); }
+        .gallery-header { text-align:center; margin-bottom:28px; }
+        .gallery-eyebrow {
+            font-size:0.65rem; letter-spacing:3px; text-transform:uppercase;
+            color:var(--p2); font-weight:600; margin-bottom:6px; opacity:0.7;
+        }
+        .gallery-header h3 {
+            font-family: Georgia, 'Playfair Display', serif;
+            font-size:1.5rem; font-weight:400; color:var(--p3);
+            letter-spacing:-0.5px; margin-bottom:6px;
+        }
+        .gallery-count {
+            font-size:0.75rem; color:var(--p2); opacity:0.6; font-weight:500;
+        }
+
+        /* Grid masonry con columnas de alturas variables */
+        .gallery-grid {
+            column-count:3; column-gap:10px; margin-bottom:32px;
+        }
+        @media(max-width:640px){ .gallery-grid{ column-count:2; column-gap:8px; } }
+        @media(max-width:380px){ .gallery-grid{ column-count:2; column-gap:6px; } }
+
+        /* Cuando hay una sola foto, se muestra grande y centrada */
+        .gallery-grid.solo { column-count:1; max-width:520px; margin-left:auto; margin-right:auto; }
+        .gallery-grid.solo .gallery-item { display:block; margin-left:auto; margin-right:auto; }
+
+        .gallery-item {
+            display:block; break-inside:avoid; margin-bottom:10px;
+            border-radius:10px; overflow:hidden; cursor:pointer;
+            background:#fff; position:relative;
+            box-shadow:0 1px 3px rgba(0,0,0,0.04);
+            transition:transform .25s ease, box-shadow .25s ease;
+        }
+        .gallery-item:hover {
+            transform:translateY(-3px);
+            box-shadow:0 12px 28px rgba(0,0,0,0.12);
+        }
+        .gallery-item img {
+            width:100%; height:auto; display:block;
+            transition:filter .25s ease;
+        }
+        .gallery-item:hover img { filter:brightness(1.02); }
+        .gallery-item-name {
+            position:absolute; bottom:0; left:0; right:0;
+            padding:24px 12px 10px;
+            background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 100%);
+            color:#fff; font-size:0.72rem; font-weight:500;
+            letter-spacing:0.3px; opacity:0;
+            transition:opacity .2s ease;
+        }
+        .gallery-item:hover .gallery-item-name { opacity:1; }
+
+        .gallery-empty {
+            padding:36px 20px; text-align:center;
+            color:var(--p2); font-size:0.88rem; font-style:italic;
+            border:1px dashed rgba(0,0,0,0.1); border-radius:14px;
+            margin-bottom:24px; opacity:0.75;
+        }
+
+        /* Formulario de subida minimalista */
+        .gallery-form {
+            background:rgba(255,255,255,0.55);
+            border:1px solid rgba(0,0,0,0.05);
+            border-radius:14px; padding:18px 16px; text-align:left;
+            backdrop-filter: blur(6px);
+        }
+        .gallery-form-title {
+            font-size:0.7rem; letter-spacing:2px; text-transform:uppercase;
+            color:var(--p3); font-weight:700; text-align:center;
+            margin-bottom:14px; opacity:0.8;
+        }
+        .gallery-form label{
+            display:block; font-size:0.72rem; font-weight:600;
+            color:var(--p3); margin-bottom:6px; opacity:0.75;
+            letter-spacing:0.3px;
+        }
+        .gallery-form input[type=text]{
+            width:100%; padding:11px 14px;
+            border:1px solid rgba(0,0,0,0.08); border-radius:10px;
+            font-family:inherit; font-size:0.9rem; margin-bottom:14px;
+            background:#fff; transition:border-color .15s;
+        }
+        .gallery-form input[type=text]:focus{ outline:none; border-color:var(--p1); }
+        .gallery-file-wrap {
+            border:1.5px dashed rgba(0,0,0,0.12); border-radius:10px;
+            padding:18px 12px; text-align:center; cursor:pointer;
+            background:#fff; margin-bottom:14px;
+            transition:border-color .15s, background .15s;
+        }
+        .gallery-file-wrap:hover { border-color:var(--p1); background:rgba(255,255,255,0.9); }
+        .gallery-file-wrap.has-file { border-color:var(--p1); border-style:solid; background:rgba(255,255,255,0.9); }
+        .gallery-file-wrap input[type=file]{ display:none; }
+        .gallery-file-icon { font-size:1.6rem; margin-bottom:6px; opacity:0.5; }
+        .gallery-file-text { font-size:0.82rem; color:var(--p3); font-weight:600; }
+        .gallery-file-hint { font-size:0.7rem; color:var(--p2); opacity:0.6; margin-top:2px; }
+        .gallery-form button{
+            width:100%; padding:12px;
+            background:var(--p1); color:#fff; border:none; border-radius:10px;
+            font-weight:600; font-size:0.88rem; letter-spacing:0.3px;
+            cursor:pointer; transition:transform .15s, box-shadow .15s;
+            font-family:inherit;
+        }
+        .gallery-form button:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(0,0,0,0.12); }
+        .gallery-form button:disabled{ opacity:.6; cursor:wait; transform:none; }
+
+        /* ===== Lightbox minimalista ===== */
+        .lightbox{
+            position:fixed; inset:0;
+            background:rgba(15,10,15,0.96);
+            display:none; align-items:center; justify-content:center;
+            z-index:9999; padding:40px 20px;
+            animation: fadeLb .2s ease;
+        }
+        @keyframes fadeLb { from{opacity:0} to{opacity:1} }
+        .lightbox.open{ display:flex; }
+        .lightbox img{
+            max-width:100%; max-height:82vh;
+            border-radius:6px;
+            box-shadow:0 30px 80px rgba(0,0,0,0.6);
+        }
+        .lightbox-close{
+            position:absolute; top:20px; right:20px;
+            width:38px; height:38px; border-radius:50%;
+            background:rgba(255,255,255,0.08); color:#fff;
+            border:1px solid rgba(255,255,255,0.1);
+            font-size:1.1rem; cursor:pointer;
+            display:flex; align-items:center; justify-content:center;
+            transition:background .15s;
+        }
+        .lightbox-close:hover{ background:rgba(255,255,255,0.18); }
+        .lightbox-caption{
+            position:absolute; bottom:24px; left:0; right:0;
+            color:rgba(255,255,255,0.85); text-align:center;
+            font-size:0.82rem; font-weight:400; letter-spacing:0.5px;
+        }
+        .lightbox-caption b { font-weight:600; color:#fff; }
 
         .emoji-big{font-size:64px;display:inline-block;animation:wiggle 2.5s ease-in-out infinite}
         @keyframes wiggle{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
@@ -990,6 +1143,815 @@
         .tpl-dragon .msg b{ color:#e88b3a !important; font-weight:700; }
 
 
+        /* ===================================================================
+           TEMA DISCO — Fiesta nocturna, negro profundo + neón
+           =================================================================== */
+        body.tpl-disco {
+            background: #050508;
+            background-image:
+                radial-gradient(circle at 15% 20%, rgba(255, 45, 149, 0.18) 0%, transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(0, 229, 255, 0.15) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(138, 77, 255, 0.08) 0%, transparent 60%);
+            background-attachment: fixed;
+            color: #f0f0f5;
+            position: relative;
+            overflow-x: hidden;
+        }
+        /* Puntos de luz distantes (estrellas) */
+        body.tpl-disco::before {
+            content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background-image:
+                radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(1px 1px at 60px 70px, rgba(0,229,255,0.5), transparent),
+                radial-gradient(1.5px 1.5px at 130px 40px, rgba(255,45,149,0.6), transparent),
+                radial-gradient(1px 1px at 190px 100px, rgba(255,255,255,0.5), transparent),
+                radial-gradient(1px 1px at 90px 160px, rgba(0,229,255,0.4), transparent),
+                radial-gradient(1.5px 1.5px at 210px 200px, rgba(255,255,255,0.4), transparent);
+            background-repeat: repeat;
+            background-size: 250px 220px;
+            opacity: 0.7;
+            animation: disco-twinkle 6s ease-in-out infinite;
+        }
+        @keyframes disco-twinkle {
+            0%,100% { opacity: 0.4; }
+            50%     { opacity: 0.85; }
+        }
+        /* Neblina de luces disco en la parte inferior */
+        body.tpl-disco::after {
+            content: ""; position: fixed; bottom: -20%; left: -20%; right: -20%;
+            height: 60%; pointer-events: none; z-index: 0;
+            background: radial-gradient(ellipse at center bottom,
+                rgba(255,45,149,0.25) 0%, rgba(138,77,255,0.15) 30%, transparent 70%);
+            filter: blur(30px);
+        }
+
+        .tpl-disco .wrap {
+            position: relative; z-index: 2;
+            max-width: none !important;
+            padding: 0 !important;
+            min-height: 100vh;
+        }
+
+        /* Card ocupa toda la pantalla: sin bordes, sin border-radius */
+        .tpl-disco .card {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            min-height: 100vh;
+            overflow: visible;
+        }
+
+        .tpl-disco .card-banner {
+            background:
+                linear-gradient(180deg, transparent 0%, rgba(255,45,149,0.08) 60%, rgba(255,45,149,0.15) 100%),
+                linear-gradient(135deg, #0a0a14 0%, #12121a 50%, #0a0a14 100%);
+            position: relative;
+            overflow: hidden;
+            height: 120px;
+            border: none;
+            box-shadow: none;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 14px;
+        }
+        /* Ocultar el SVG default del banner */
+        .tpl-disco .card-banner > svg { display: none !important; }
+
+        /* Título con glow neón */
+        .tpl-disco .script-title {
+            color: #fff;
+            text-shadow:
+                0 0 10px rgba(255, 45, 149, 0.8),
+                0 0 20px rgba(255, 45, 149, 0.5),
+                0 0 30px rgba(138, 77, 255, 0.4);
+        }
+        .tpl-disco .sub-invite {
+            color: #00e5ff !important;
+            text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+            letter-spacing: 6px;
+        }
+        .tpl-disco .card-body {
+            color: #e0e0ea;
+            padding: 32px 20px 40px;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+        .tpl-disco .flourish-divider { stroke: #ff2d95; filter: drop-shadow(0 0 4px rgba(255,45,149,0.6)); }
+
+        /* Textos y detalles del cuerpo */
+        .tpl-disco h2, .tpl-disco h3, .tpl-disco h4, .tpl-disco strong { color: #fff; }
+        .tpl-disco p, .tpl-disco small, .tpl-disco span { color: #c0c0d0; }
+        .tpl-disco .badge {
+            background: rgba(255, 45, 149, 0.15);
+            color: #ff2d95;
+            border: 1px solid rgba(255, 45, 149, 0.4);
+            text-shadow: 0 0 6px rgba(255, 45, 149, 0.5);
+        }
+
+        /* Caja de detalles extra: fondo oscuro con borde neón dashed */
+        .tpl-disco .extra-details {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1.5px dashed rgba(255, 45, 149, 0.5);
+            box-shadow:
+                0 0 20px rgba(255, 45, 149, 0.15),
+                inset 0 0 30px rgba(138, 77, 255, 0.06);
+            backdrop-filter: blur(4px);
+        }
+        .tpl-disco .extra-details-item:not(:last-child) {
+            border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+        }
+        .tpl-disco .extra-details-item strong {
+            color: #00e5ff;
+            text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+            letter-spacing: 1px;
+        }
+        .tpl-disco .extra-details-item p {
+            color: #e0e0ea;
+        }
+        .tpl-disco .extra-details-item span {
+            filter: drop-shadow(0 0 6px rgba(255, 45, 149, 0.5));
+        }
+
+        /* Botones con glow */
+        .tpl-disco .btn {
+            background: linear-gradient(135deg, #ff2d95, #8a4dff);
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 20px rgba(255, 45, 149, 0.5), 0 0 30px rgba(138, 77, 255, 0.3);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .tpl-disco .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255, 45, 149, 0.7), 0 0 40px rgba(0, 229, 255, 0.4); }
+        .tpl-disco .btn-maps {
+            background: transparent;
+            border: 1.5px solid #00e5ff;
+            color: #00e5ff;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+        }
+        .tpl-disco .btn-maps:hover { background: rgba(0, 229, 255, 0.1); box-shadow: 0 0 25px rgba(0, 229, 255, 0.6); }
+
+        /* Inputs oscuros */
+        .tpl-disco input[type=text], .tpl-disco input[type=email], .tpl-disco textarea, .tpl-disco select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 45, 149, 0.25);
+            color: #fff;
+        }
+        .tpl-disco input:focus, .tpl-disco textarea:focus {
+            border-color: #ff2d95;
+            box-shadow: 0 0 12px rgba(255, 45, 149, 0.4);
+        }
+        .tpl-disco input::placeholder, .tpl-disco textarea::placeholder { color: rgba(255,255,255,0.35); }
+        .tpl-disco label { color: #c0c0d0; }
+
+        /* Mensajes de invitados */
+        .tpl-disco .msgs h3 { color: #ff2d95; text-shadow: 0 0 8px rgba(255, 45, 149, 0.5); }
+        .tpl-disco .msg {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(0, 229, 255, 0.15);
+            color: #d0d0e0;
+        }
+        .tpl-disco .msg b { color: #00e5ff !important; }
+
+        /* Cuenta regresiva estilo LED */
+        .tpl-disco .countdown-num, .tpl-disco .cd-num, .tpl-disco .num {
+            color: #00e5ff;
+            text-shadow: 0 0 15px rgba(0, 229, 255, 0.8);
+        }
+
+        /* Galería con look nocturno */
+        .tpl-disco .gallery {
+            border-top-color: rgba(255,255,255,0.1);
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .tpl-disco .gallery-eyebrow { color: rgba(255, 45, 149, 0.8); }
+        .tpl-disco .gallery-header h3 { color: #fff; }
+        .tpl-disco .gallery-count { color: rgba(255,255,255,0.4); }
+        .tpl-disco .gallery-item {
+            background: #12121c;
+            box-shadow: 0 0 20px rgba(255, 45, 149, 0.15);
+        }
+        .tpl-disco .gallery-item:hover { box-shadow: 0 10px 30px rgba(255, 45, 149, 0.4), 0 0 40px rgba(0, 229, 255, 0.2); }
+        .tpl-disco .gallery-empty { border-color: rgba(255, 45, 149, 0.25); color: rgba(255,255,255,0.5); }
+        .tpl-disco .gallery-form {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 45, 149, 0.2);
+        }
+        .tpl-disco .gallery-form-title { color: #00e5ff; }
+        .tpl-disco .gallery-form label { color: rgba(255,255,255,0.6); }
+        .tpl-disco .gallery-form input[type=text] { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color:#fff; }
+        .tpl-disco .gallery-file-wrap { background: rgba(255,255,255,0.03); border-color: rgba(255, 45, 149, 0.3); }
+        .tpl-disco .gallery-file-wrap:hover { background: rgba(255, 45, 149, 0.05); border-color:#ff2d95; }
+        .tpl-disco .gallery-file-text { color: rgba(255,255,255,0.85); }
+        .tpl-disco .gallery-file-hint { color: rgba(255,255,255,0.4); }
+        .tpl-disco .gallery-form button {
+            background: linear-gradient(135deg, #ff2d95, #00e5ff);
+            box-shadow: 0 4px 20px rgba(255, 45, 149, 0.5);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* ========== Globos de neón flotantes ========== */
+        .disco-balloons {
+            position: fixed; inset: 0; pointer-events: none;
+            overflow: hidden; z-index: 1;
+        }
+        .disco-balloon {
+            position: absolute;
+            bottom: -140px;
+            width: 46px; height: 58px;
+            border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
+            opacity: 0.85;
+            animation: balloon-float 18s linear infinite;
+            transform-origin: center bottom;
+        }
+        /* Brillo cenital del globo */
+        .disco-balloon::before {
+            content: ""; position: absolute;
+            top: 8px; left: 10px;
+            width: 12px; height: 16px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.55);
+            filter: blur(2px);
+        }
+        /* Hilo del globo */
+        .disco-balloon::after {
+            content: ""; position: absolute;
+            bottom: -32px; left: 50%;
+            width: 1px; height: 32px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(255,255,255,0));
+            transform: translateX(-50%);
+        }
+
+        /* Variantes de color con glow neón */
+        .disco-balloon.pink {
+            background: radial-gradient(circle at 35% 30%, #ff6bc5 0%, #ff2d95 60%, #c11876 100%);
+            box-shadow:
+                0 0 20px rgba(255,45,149,0.9),
+                0 0 40px rgba(255,45,149,0.5),
+                inset -6px -6px 12px rgba(0,0,0,0.25);
+        }
+        .disco-balloon.cyan {
+            background: radial-gradient(circle at 35% 30%, #7bf1ff 0%, #00e5ff 60%, #007a8a 100%);
+            box-shadow:
+                0 0 20px rgba(0,229,255,0.9),
+                0 0 40px rgba(0,229,255,0.5),
+                inset -6px -6px 12px rgba(0,0,0,0.25);
+        }
+        .disco-balloon.purple {
+            background: radial-gradient(circle at 35% 30%, #c99cff 0%, #8a4dff 60%, #4a2688 100%);
+            box-shadow:
+                0 0 20px rgba(138,77,255,0.9),
+                0 0 40px rgba(138,77,255,0.5),
+                inset -6px -6px 12px rgba(0,0,0,0.25);
+        }
+        .disco-balloon.yellow {
+            background: radial-gradient(circle at 35% 30%, #ffec6b 0%, #ffd400 60%, #a68800 100%);
+            box-shadow:
+                0 0 20px rgba(255,212,0,0.9),
+                0 0 40px rgba(255,212,0,0.5),
+                inset -6px -6px 12px rgba(0,0,0,0.25);
+        }
+        .disco-balloon.lime {
+            background: radial-gradient(circle at 35% 30%, #ddff8a 0%, #a4f000 60%, #5f8a00 100%);
+            box-shadow:
+                0 0 20px rgba(164,240,0,0.9),
+                0 0 40px rgba(164,240,0,0.5),
+                inset -6px -6px 12px rgba(0,0,0,0.25);
+        }
+
+        @keyframes balloon-float {
+            0%   { transform: translateY(0) translateX(0) rotate(-2deg); }
+            25%  { transform: translateY(-30vh) translateX(-15px) rotate(3deg); }
+            50%  { transform: translateY(-60vh) translateX(20px) rotate(-3deg); }
+            75%  { transform: translateY(-85vh) translateX(-10px) rotate(2deg); }
+            100% { transform: translateY(-120vh) translateX(0) rotate(0deg); }
+        }
+        @keyframes balloon-glow-pulse {
+            0%,100% { filter: brightness(1); }
+            50%     { filter: brightness(1.25); }
+        }
+        .disco-balloon { animation: balloon-float 18s linear infinite, balloon-glow-pulse 3s ease-in-out infinite; }
+
+
+        /* ===================================================================
+           TEMA NEON PARTY — Festival juvenil, verde ácido + magenta + amarillo
+           =================================================================== */
+        body.tpl-neonparty {
+            background: #060000;
+            background-image:
+                radial-gradient(circle at 20% 15%, rgba(255, 23, 68, 0.28) 0%, transparent 45%),
+                radial-gradient(circle at 80% 85%, rgba(255, 77, 109, 0.22) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(184, 0, 46, 0.14) 0%, transparent 60%);
+            background-attachment: fixed;
+            color: #f5e0e5;
+            position: relative;
+            overflow-x: hidden;
+        }
+        body.tpl-neonparty::before {
+            content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background-image:
+                radial-gradient(1px 1px at 25px 40px, rgba(255,255,255,0.55), transparent),
+                radial-gradient(1.5px 1.5px at 80px 90px, rgba(255, 23, 68, 0.75), transparent),
+                radial-gradient(1px 1px at 140px 60px, rgba(255, 77, 109, 0.6), transparent),
+                radial-gradient(1.5px 1.5px at 200px 130px, rgba(255, 100, 100, 0.5), transparent),
+                radial-gradient(1px 1px at 60px 180px, rgba(255,255,255,0.4), transparent),
+                radial-gradient(1.5px 1.5px at 240px 210px, rgba(255, 23, 68, 0.6), transparent);
+            background-repeat: repeat;
+            background-size: 280px 240px;
+            opacity: 0.75;
+            animation: neonparty-twinkle 5s ease-in-out infinite;
+        }
+        @keyframes neonparty-twinkle {
+            0%,100% { opacity: 0.4; }
+            50%     { opacity: 0.9; }
+        }
+        body.tpl-neonparty::after {
+            content: ""; position: fixed; bottom: -20%; left: -20%; right: -20%;
+            height: 60%; pointer-events: none; z-index: 0;
+            background: radial-gradient(ellipse at center bottom,
+                rgba(255, 23, 68, 0.35) 0%, rgba(184, 0, 46, 0.2) 30%, transparent 70%);
+            filter: blur(30px);
+        }
+
+        .tpl-neonparty .wrap {
+            position: relative; z-index: 2;
+            max-width: none !important;
+            padding: 0 !important;
+            min-height: 100vh;
+        }
+
+        .tpl-neonparty .card {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            min-height: 100vh;
+            overflow: visible;
+        }
+
+        .tpl-neonparty .card-banner {
+            background: transparent;
+            position: relative;
+            overflow: hidden;
+            height: 40px;
+            border: none;
+            box-shadow: none;
+        }
+        .tpl-neonparty .card-banner > svg { display: none !important; }
+
+        .tpl-neonparty .card-body {
+            color: #e0e0ea;
+            padding: 32px 20px 40px;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        /* Character circular sin fondo blanco en temas oscuros */
+        .tpl-disco .card-body > div[style*="border-radius: 50%"],
+        .tpl-neonparty .card-body > div[style*="border-radius: 50%"] {
+            background: transparent !important;
+            border-color: var(--p1) !important;
+            box-shadow:
+                0 0 20px rgba(164, 240, 0, 0.4),
+                0 0 40px rgba(255, 0, 255, 0.25) !important;
+        }
+        .tpl-disco .card-body > div[style*="border-radius: 50%"] {
+            box-shadow:
+                0 0 20px rgba(255, 45, 149, 0.5),
+                0 0 40px rgba(0, 229, 255, 0.3) !important;
+        }
+        .tpl-neonparty .script-title {
+            color: #fff;
+            text-shadow:
+                0 0 10px rgba(255, 23, 68, 0.95),
+                0 0 20px rgba(255, 23, 68, 0.6),
+                0 0 30px rgba(184, 0, 46, 0.5);
+        }
+        .tpl-neonparty .sub-invite {
+            color: #ff4d6d !important;
+            text-shadow: 0 0 8px rgba(255, 77, 109, 0.7);
+            letter-spacing: 6px;
+        }
+
+        .tpl-neonparty h2, .tpl-neonparty h3, .tpl-neonparty h4, .tpl-neonparty strong { color: #fff; }
+        .tpl-neonparty p, .tpl-neonparty small, .tpl-neonparty span { color: #e5c0c8; }
+        .tpl-neonparty .badge {
+            background: rgba(255, 23, 68, 0.18);
+            color: #ff8fa3;
+            border: 1px solid rgba(255, 23, 68, 0.5);
+            text-shadow: 0 0 6px rgba(255, 23, 68, 0.6);
+        }
+
+        .tpl-neonparty .extra-details {
+            background: rgba(20, 0, 5, 0.5);
+            border: 1.5px dashed rgba(255, 23, 68, 0.6);
+            box-shadow:
+                0 0 20px rgba(255, 23, 68, 0.22),
+                inset 0 0 30px rgba(184, 0, 46, 0.08);
+            backdrop-filter: blur(4px);
+        }
+        .tpl-neonparty .extra-details-item:not(:last-child) {
+            border-bottom: 1px solid rgba(255, 77, 109, 0.22);
+        }
+        .tpl-neonparty .extra-details-item strong {
+            color: #ff8fa3;
+            text-shadow: 0 0 8px rgba(255, 77, 109, 0.6);
+            letter-spacing: 1px;
+        }
+        .tpl-neonparty .extra-details-item p { color: #f0d5da; }
+        .tpl-neonparty .extra-details-item span {
+            filter: drop-shadow(0 0 6px rgba(255, 23, 68, 0.6));
+        }
+
+        .tpl-neonparty .btn {
+            background: linear-gradient(135deg, #ff1744, #b8002e);
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 20px rgba(255, 23, 68, 0.65), 0 0 30px rgba(184, 0, 46, 0.4);
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        .tpl-neonparty .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 23, 68, 0.85), 0 0 40px rgba(255, 77, 109, 0.5);
+        }
+        .tpl-neonparty .btn-maps {
+            background: transparent;
+            border: 1.5px solid #ff4d6d;
+            color: #ff8fa3;
+            box-shadow: 0 0 15px rgba(255, 77, 109, 0.35);
+        }
+        .tpl-neonparty .btn-maps:hover {
+            background: rgba(255, 77, 109, 0.12);
+            box-shadow: 0 0 25px rgba(255, 77, 109, 0.65);
+        }
+
+        /* Botón "Ver mapa" — sutil pero con brillo neón */
+        .tpl-neonparty .btn-map-toggle {
+            background: rgba(255, 23, 68, 0.08);
+            border: 1px solid rgba(255, 77, 109, 0.55);
+            color: #ff8fa3;
+            text-decoration: none;
+            padding: 5px 14px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 0 12px rgba(255, 77, 109, 0.4), inset 0 0 8px rgba(255, 77, 109, 0.15);
+            text-shadow: 0 0 6px rgba(255, 143, 163, 0.7);
+            margin-top: 8px;
+            transition: box-shadow .25s ease, transform .15s ease, background .25s ease;
+            animation: neonparty-map-pulse 2.4s ease-in-out infinite;
+        }
+        .tpl-neonparty .btn-map-toggle:hover {
+            background: rgba(255, 77, 109, 0.18);
+            box-shadow: 0 0 22px rgba(255, 77, 109, 0.8), inset 0 0 12px rgba(255, 77, 109, 0.25);
+            transform: translateY(-1px);
+            opacity: 1;
+        }
+        @keyframes neonparty-map-pulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 77, 109, 0.35), inset 0 0 8px rgba(255, 77, 109, 0.12); }
+            50%      { box-shadow: 0 0 20px rgba(255, 77, 109, 0.7),  inset 0 0 12px rgba(255, 77, 109, 0.2); }
+        }
+
+        .tpl-neonparty input[type=text], .tpl-neonparty input[type=email],
+        .tpl-neonparty textarea, .tpl-neonparty select {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 23, 68, 0.32);
+            color: #fff;
+        }
+        .tpl-neonparty input:focus, .tpl-neonparty textarea:focus {
+            border-color: #ff1744;
+            box-shadow: 0 0 12px rgba(255, 23, 68, 0.5);
+        }
+        .tpl-neonparty input::placeholder, .tpl-neonparty textarea::placeholder { color: rgba(255,255,255,0.35); }
+        .tpl-neonparty label { color: #e5c0c8; }
+
+        .tpl-neonparty .msgs h3 {
+            color: #ff4d6d;
+            text-shadow: 0 0 8px rgba(255, 77, 109, 0.6);
+        }
+        .tpl-neonparty .msg {
+            background: rgba(20, 0, 5, 0.4);
+            border: 1px solid rgba(255, 23, 68, 0.22);
+            color: #f0d5da;
+        }
+        .tpl-neonparty .msg b { color: #ff4d6d !important; }
+
+        .tpl-neonparty .countdown-num,
+        .tpl-neonparty .cd-num,
+        .tpl-neonparty .num {
+            color: #ff1744;
+            text-shadow: 0 0 15px rgba(255, 23, 68, 0.9);
+        }
+
+        .tpl-neonparty .gallery {
+            border-top: 1px solid rgba(255, 23, 68, 0.35);
+            position: relative; z-index: 3;
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .tpl-neonparty .gallery-eyebrow {
+            color: #ff4d6d;
+            opacity: 1;
+            font-weight: 800;
+            text-shadow: 0 0 8px rgba(255, 77, 109, 0.6);
+        }
+        .tpl-neonparty .gallery-header h3 {
+            color: #fff;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 23, 68, 0.8), 0 0 20px rgba(255, 23, 68, 0.4);
+        }
+        .tpl-neonparty .gallery-count {
+            color: #ff8fa3;
+            opacity: 1;
+            font-weight: 600;
+        }
+        .tpl-neonparty .gallery-item {
+            background: #14000a;
+            box-shadow: 0 0 20px rgba(255, 23, 68, 0.18);
+        }
+        .tpl-neonparty .gallery-item:hover {
+            box-shadow: 0 10px 30px rgba(255, 23, 68, 0.5), 0 0 40px rgba(255, 77, 109, 0.25);
+        }
+        .tpl-neonparty .gallery-empty {
+            background: rgba(20, 0, 5, 0.6);
+            border: 1.5px dashed rgba(255, 77, 109, 0.65);
+            color: #ff8fa3;
+            opacity: 1;
+            padding: 32px 20px;
+            box-shadow: 0 0 30px rgba(255, 23, 68, 0.15);
+            backdrop-filter: blur(4px);
+        }
+        .tpl-neonparty .gallery-form {
+            background: rgba(20, 0, 5, 0.75);
+            border: 1.5px solid rgba(255, 23, 68, 0.5);
+            box-shadow: 0 0 40px rgba(255, 23, 68, 0.2), inset 0 0 30px rgba(184, 0, 46, 0.15);
+            backdrop-filter: blur(6px);
+            position: relative; z-index: 3;
+        }
+        .tpl-neonparty .gallery-form-title {
+            color: #ff4d6d;
+            font-weight: 800;
+            opacity: 1;
+            text-shadow: 0 0 8px rgba(255, 77, 109, 0.7);
+        }
+        .tpl-neonparty .gallery-form label {
+            color: #ff8fa3;
+            opacity: 1;
+            font-weight: 700;
+        }
+        .tpl-neonparty .gallery-form input[type=text] {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,23,68,0.4);
+            color: #fff;
+        }
+        .tpl-neonparty .gallery-form input[type=text]::placeholder {
+            color: rgba(255, 143, 163, 0.55);
+        }
+        .tpl-neonparty .gallery-file-wrap {
+            background: rgba(255,255,255,0.04);
+            border: 1.5px dashed rgba(255, 77, 109, 0.55);
+        }
+        .tpl-neonparty .gallery-file-wrap:hover {
+            background: rgba(255, 23, 68, 0.1);
+            border-color: #ff1744;
+        }
+        .tpl-neonparty .gallery-file-wrap.has-file {
+            border-color: #ff1744;
+            border-style: solid;
+            background: rgba(255, 23, 68, 0.12);
+        }
+        .tpl-neonparty .gallery-file-icon { opacity: 0.9; filter: drop-shadow(0 0 8px rgba(255, 23, 68, 0.6)); }
+        .tpl-neonparty .gallery-file-text {
+            color: #fff;
+            font-weight: 700;
+        }
+        .tpl-neonparty .gallery-file-hint {
+            color: #ff8fa3;
+            opacity: 0.75;
+        }
+        .tpl-neonparty .gallery-form button {
+            background: linear-gradient(135deg, #ff1744, #b8002e);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(255, 23, 68, 0.65), 0 0 40px rgba(255, 77, 109, 0.3);
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* ========== 5 Diablitos distribuidos por el tema Neon Party ========== */
+        .neonparty-devil {
+            position: fixed;
+            height: auto;
+            pointer-events: none;
+            z-index: 1;
+            filter: drop-shadow(0 0 20px rgba(255, 23, 68, 0.7))
+                    drop-shadow(0 0 40px rgba(184, 0, 46, 0.4));
+        }
+        /* Diablito 1: XL abajo-derecha, muy transparente (watermark principal) */
+        .neonparty-devil.d1 {
+            right: -80px; bottom: -60px;
+            width: 60vw; max-width: 520px;
+            opacity: 0.09;
+            animation: devil-breathe 6s ease-in-out infinite;
+        }
+        /* Diablito 2: mediano arriba-izquierda, opacidad media, rotado */
+        .neonparty-devil.d2 {
+            top: 8vh; left: -30px;
+            width: 22vw; max-width: 180px;
+            opacity: 0.18;
+            transform: rotate(-15deg);
+            animation: devil-drift-a 9s ease-in-out infinite;
+        }
+        /* Diablito 3: chico medio-derecha, opacidad baja */
+        .neonparty-devil.d3 {
+            top: 40vh; right: 4vw;
+            width: 14vw; max-width: 110px;
+            opacity: 0.11;
+            transform: rotate(10deg);
+            animation: devil-drift-b 11s ease-in-out infinite;
+        }
+        /* Diablito 4: mediano medio-izquierda, muy transparente */
+        .neonparty-devil.d4 {
+            top: 62vh; left: 5vw;
+            width: 18vw; max-width: 150px;
+            opacity: 0.07;
+            transform: rotate(20deg);
+            animation: devil-breathe 8s ease-in-out infinite reverse;
+        }
+        /* Diablito 5: chico arriba-derecha, opacidad media */
+        .neonparty-devil.d5 {
+            top: 30vh; left: 12vw;
+            width: 12vw; max-width: 90px;
+            opacity: 0.22;
+            transform: rotate(-8deg);
+            animation: devil-drift-a 7s ease-in-out infinite reverse;
+        }
+        @keyframes devil-breathe {
+            0%,100% { transform: scale(1) rotate(-3deg); }
+            50%     { transform: scale(1.05) rotate(-1deg); }
+        }
+        @keyframes devil-drift-a {
+            0%,100% { transform: rotate(-15deg) translateY(0); }
+            50%     { transform: rotate(-10deg) translateY(-10px); }
+        }
+        @keyframes devil-drift-b {
+            0%,100% { transform: rotate(10deg) translateY(0); }
+            50%     { transform: rotate(6deg) translateY(-8px); }
+        }
+
+        /* ========== Monjas decorativas — contraste espiritual con los diablitos ========== */
+        .neonparty-nun {
+            position: fixed;
+            height: auto;
+            pointer-events: none;
+            z-index: 1;
+            filter:
+                drop-shadow(0 0 18px rgba(255, 200, 210, 0.5))
+                drop-shadow(0 0 34px rgba(255, 77, 109, 0.35));
+        }
+        /* Monja 1: mediana arriba-derecha */
+        .neonparty-nun.n1 {
+            top: 6vh; right: -20px;
+            width: 22vw; max-width: 180px;
+            opacity: 0.35;
+            transform: rotate(6deg);
+            animation: nun-float-a 12s ease-in-out infinite;
+        }
+        /* Monja 2: chica media-izquierda */
+        .neonparty-nun.n2 {
+            top: 48vh; left: -18px;
+            width: 16vw; max-width: 140px;
+            opacity: 0.28;
+            transform: rotate(-10deg);
+            animation: nun-float-b 15s ease-in-out infinite reverse;
+        }
+        /* Monja 3: XL abajo-izquierda (balancea al diablo d1) */
+        .neonparty-nun.n3 {
+            left: -70px; bottom: -50px;
+            width: 48vw; max-width: 400px;
+            opacity: 0.22;
+            transform: rotate(-4deg);
+            animation: nun-float-a 14s ease-in-out infinite;
+        }
+        @keyframes nun-float-a {
+            0%,100% { transform: rotate(6deg) translateY(0); }
+            50%     { transform: rotate(3deg) translateY(-6px); }
+        }
+        @keyframes nun-float-b {
+            0%,100% { transform: rotate(-10deg) translateY(0); }
+            50%     { transform: rotate(-6deg) translateY(-8px); }
+        }
+        @media (max-width: 480px) {
+            .neonparty-nun.n1 {
+                width: 34vw; max-width: 140px;
+                top: 4vh; right: -30px;
+                opacity: 0.22;
+            }
+            .neonparty-nun.n2 {
+                width: 26vw; max-width: 110px;
+                top: 55vh; left: -24px;
+                opacity: 0.18;
+            }
+            .neonparty-nun.n3 {
+                width: 70vw; max-width: 320px;
+                left: -60px; bottom: -40px;
+                opacity: 0.14;
+            }
+        }
+
+        /* Diablito HERO grande en la cabecera, "asomándose" (nítido, protagonista) */
+        .tpl-neonparty .card-banner .neonparty-hero-devil {
+            position: absolute;
+            top: -20px; right: 12px;
+            width: 130px; height: auto;
+            z-index: 4;
+            filter:
+                drop-shadow(0 0 12px rgba(255, 23, 68, 1))
+                drop-shadow(0 0 24px rgba(255, 77, 109, 0.7))
+                drop-shadow(0 0 40px rgba(184, 0, 46, 0.5));
+            animation: devil-wobble 3.5s ease-in-out infinite;
+            transform-origin: bottom center;
+        }
+        @keyframes devil-wobble {
+            0%,100% { transform: rotate(-6deg) translateY(0); }
+            50%     { transform: rotate(6deg) translateY(-4px); }
+        }
+        @media (max-width: 480px) {
+            .tpl-neonparty .card-banner .neonparty-hero-devil {
+                width: 100px; top: -14px; right: 8px;
+            }
+        }
+
+        /* Globos neon party (paleta rojo/negro) */
+        .neon-balloon.acid {
+            background: radial-gradient(circle at 35% 30%, #ff6b7a 0%, #ff1744 60%, #8a001a 100%);
+            box-shadow:
+                0 0 20px rgba(255, 23, 68, 0.95),
+                0 0 40px rgba(255, 23, 68, 0.5),
+                inset -6px -6px 12px rgba(0,0,0,0.3);
+        }
+        .neon-balloon.magenta {
+            background: radial-gradient(circle at 35% 30%, #ffa0b0 0%, #ff4d6d 60%, #a30035 100%);
+            box-shadow:
+                0 0 20px rgba(255, 77, 109, 0.95),
+                0 0 40px rgba(255, 77, 109, 0.5),
+                inset -6px -6px 12px rgba(0,0,0,0.3);
+        }
+        .neon-balloon.gold {
+            background: radial-gradient(circle at 35% 30%, #ff8fa3 0%, #dc143c 60%, #660014 100%);
+            box-shadow:
+                0 0 20px rgba(220, 20, 60, 0.95),
+                0 0 40px rgba(220, 20, 60, 0.5),
+                inset -6px -6px 12px rgba(0,0,0,0.3);
+        }
+        .neon-balloon.orange {
+            background: radial-gradient(circle at 35% 30%, #4a0010 0%, #1a0004 60%, #000 100%);
+            box-shadow:
+                0 0 15px rgba(255, 23, 68, 0.7),
+                0 0 30px rgba(255, 23, 68, 0.4),
+                inset -6px -6px 12px rgba(0,0,0,0.6),
+                inset 3px 3px 6px rgba(255, 23, 68, 0.15);
+            border: 1px solid rgba(255, 23, 68, 0.5);
+        }
+        .neon-balloon {
+            position: absolute;
+            bottom: -140px;
+            width: 46px; height: 58px;
+            border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
+            opacity: 0.9;
+            transform-origin: center bottom;
+            animation: balloon-float 18s linear infinite, balloon-glow-pulse 2.5s ease-in-out infinite;
+        }
+        .neon-balloon::before {
+            content: ""; position: absolute;
+            top: 8px; left: 10px;
+            width: 12px; height: 16px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.6);
+            filter: blur(2px);
+        }
+        .neon-balloon::after {
+            content: ""; position: absolute;
+            bottom: -32px; left: 50%;
+            width: 1px; height: 32px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.45), rgba(255,255,255,0));
+            transform: translateX(-50%);
+        }
+
+
         /* ---------- 10. STICKER — die-cut, personaje protagonista ---------- */
         body.tpl-sticker{
             background:var(--p1);
@@ -1020,6 +1982,43 @@
     </style>
 </head>
 <body class="tpl-{{ $event->template ?? 'classic' }}">
+    @if(($event->template ?? '') === 'disco')
+        <div class="disco-balloons" aria-hidden="true">
+            <div class="disco-balloon pink"   style="left: 8%;  animation-delay: 0s;    animation-duration: 20s;"></div>
+            <div class="disco-balloon cyan"   style="left: 22%; animation-delay: -6s;   animation-duration: 24s;"></div>
+            <div class="disco-balloon purple" style="left: 38%; animation-delay: -3s;   animation-duration: 19s;"></div>
+            <div class="disco-balloon yellow" style="left: 52%; animation-delay: -12s;  animation-duration: 22s;"></div>
+            <div class="disco-balloon pink"   style="left: 68%; animation-delay: -9s;   animation-duration: 26s;"></div>
+            <div class="disco-balloon lime"   style="left: 82%; animation-delay: -15s;  animation-duration: 21s;"></div>
+            <div class="disco-balloon cyan"   style="left: 92%; animation-delay: -4s;   animation-duration: 23s; width:32px; height:40px;"></div>
+            <div class="disco-balloon purple" style="left: 14%; animation-delay: -18s;  animation-duration: 25s; width:36px; height:46px;"></div>
+            <div class="disco-balloon yellow" style="left: 45%; animation-delay: -21s;  animation-duration: 27s; width:34px; height:42px;"></div>
+            <div class="disco-balloon pink"   style="left: 76%; animation-delay: -24s;  animation-duration: 20s; width:38px; height:48px;"></div>
+        </div>
+    @endif
+
+    @if(($event->template ?? '') === 'neonparty')
+        <img src="{{ asset('images/themes/emogimalo.png') }}" alt="" class="neonparty-devil d1" aria-hidden="true">
+        <img src="{{ asset('images/themes/emogimalo.png') }}" alt="" class="neonparty-devil d2" aria-hidden="true">
+        <img src="{{ asset('images/themes/emogimalo.png') }}" alt="" class="neonparty-devil d3" aria-hidden="true">
+        <img src="{{ asset('images/themes/emogimalo.png') }}" alt="" class="neonparty-devil d4" aria-hidden="true">
+        <img src="{{ asset('images/themes/emogimalo.png') }}" alt="" class="neonparty-devil d5" aria-hidden="true">
+        <img src="{{ asset('images/themes/monja1.png') }}" alt="" class="neonparty-nun n1" aria-hidden="true">
+        <img src="{{ asset('images/themes/monja1.png') }}" alt="" class="neonparty-nun n2" aria-hidden="true">
+        <img src="{{ asset('images/themes/monja1.png') }}" alt="" class="neonparty-nun n3" aria-hidden="true">
+        <div class="disco-balloons" aria-hidden="true">
+            <div class="neon-balloon acid"    style="left: 8%;  animation-delay: 0s;    animation-duration: 20s;"></div>
+            <div class="neon-balloon magenta" style="left: 22%; animation-delay: -6s;   animation-duration: 24s;"></div>
+            <div class="neon-balloon gold"    style="left: 38%; animation-delay: -3s;   animation-duration: 19s;"></div>
+            <div class="neon-balloon orange"  style="left: 52%; animation-delay: -12s;  animation-duration: 22s;"></div>
+            <div class="neon-balloon acid"    style="left: 68%; animation-delay: -9s;   animation-duration: 26s;"></div>
+            <div class="neon-balloon magenta" style="left: 82%; animation-delay: -15s;  animation-duration: 21s;"></div>
+            <div class="neon-balloon gold"    style="left: 92%; animation-delay: -4s;   animation-duration: 23s; width:32px; height:40px;"></div>
+            <div class="neon-balloon orange"  style="left: 14%; animation-delay: -18s;  animation-duration: 25s; width:36px; height:46px;"></div>
+            <div class="neon-balloon acid"    style="left: 45%; animation-delay: -21s;  animation-duration: 27s; width:34px; height:42px;"></div>
+            <div class="neon-balloon magenta" style="left: 76%; animation-delay: -24s;  animation-duration: 20s; width:38px; height:48px;"></div>
+        </div>
+    @endif
     @if($isPreview)
         <div style="position: sticky; top: 0; left: 0; right: 0; background: rgba(255, 179, 71, 0.95); backdrop-filter: blur(5px); color: #5a4b00; text-align: center; padding: 10px; font-weight: bold; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-bottom: 2px solid #ffb347; display: flex; align-items: center; justify-content: center; gap: 15px; font-size: 0.9rem;">
             <span>🚧 Vista Previa (Modo Borrador)</span>
@@ -1127,7 +2126,7 @@
                             <rect x="481" y="37" width="18" height="5" fill="var(--p1)" rx="1.5" />
                             <path d="M485,37 C485,33 495,33 495,37 Z" fill="#ffe082" />
                         </svg>
-                    @elseif(in_array($event->event_type, ['bautizo', 'comunion']))
+                    @elseif(in_array($event->event_type, ['bautizo', 'comunion', 'boda', 'aniversario']))
                         <!-- Botanical Leaves Vine (Bautizo / Communion) -->
                         <svg viewBox="0 0 600 120" preserveAspectRatio="none" style="width:100%; height:120px; display:block;">
                             <!-- Sky background -->
@@ -1212,11 +2211,6 @@
                     <!-- INVITACIÓN label -->
                     <h3 class="sub-invite">Invitación</h3>
 
-                    <!-- Calligraphy Flourish Divider -->
-                    <svg height="24" width="140" viewBox="0 0 120 24" class="flourish-divider">
-                        <path d="M10,12 C30,2 40,22 60,12 C80,2 90,22 110,12 M60,4 C60,4 58,12 60,20 M35,12 C40,16 45,16 50,12 M70,12 C75,16 80,16 85,12" />
-                    </svg>
-
                     <!-- Central Graphic: Reveal images OR Theme Character OR Fallback -->
                     @if($event->reveal_image_1 || $event->reveal_image_2)
                         <div class="reveal-pair">
@@ -1232,7 +2226,7 @@
                             <img src="{{ asset('images/themes/' . $event->theme_character . '.png') }}" alt="Theme character" style="max-width: 90%; max-height: 90%; object-fit: contain;">
                         </div>
                     @else
-                        @if($event->event_type === 'cumple')
+                        @if(in_array($event->event_type, ['cumple', 'quinceanero', 'graduacion', 'despedida', 'general']) && ($event->template ?? '') !== 'neonparty')
                             <!-- Elegant Cake SVG -->
                             <svg viewBox="0 0 100 90" style="width:70px; height:70px; margin: 10px auto 16px auto; display:block; color: var(--p1); opacity: 0.85;">
                                 <path d="M50 20 L50 35 M50 15 C52 15, 53 18, 50 20 C47 18, 48 15, 50 15" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
@@ -1246,7 +2240,7 @@
                                 <circle cx="50" cy="66" r="2" fill="currentColor" />
                                 <circle cx="65" cy="66" r="2" fill="currentColor" />
                             </svg>
-                        @elseif(in_array($event->event_type, ['bautizo', 'comunion']))
+                        @elseif(in_array($event->event_type, ['bautizo', 'comunion', 'boda', 'aniversario']))
                             <!-- Elegant Dove SVG -->
                             <svg viewBox="0 0 100 90" style="width:80px; height:75px; margin: 10px auto 16px auto; display:block; color: var(--p1); opacity: 0.85;">
                                 <path d="M25,50 C30,45 42,40 50,45 C58,35 68,25 78,35 C70,40 65,48 68,52 C73,50 82,45 88,48 C80,55 70,62 60,60 C55,62 48,68 40,70 C43,62 38,58 35,56 C30,58 20,60 15,55 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -1362,9 +2356,65 @@
             @if($event->show_messages && $messages->count())
                 <div class="msgs">
                     <h3>Mensajes de los invitados</h3>
-                    @foreach($messages as $m)
-                        <div class="msg"><b>{{ $m->name }}:</b> {{ $m->message }}</div>
-                    @endforeach
+                    <div class="msgs-list">
+                        @foreach($messages as $m)
+                            <div class="msg"><b>{{ $m->name }}:</b> {{ $m->message }}</div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            @if($event->show_gallery)
+                <div class="gallery" id="gallery">
+                    <div class="gallery-header">
+                        <div class="gallery-eyebrow">Álbum del evento</div>
+                        <h3>Recuerdos compartidos</h3>
+                        <div class="gallery-count">
+                            {{ $galleryPhotos->count() }}
+                            {{ $galleryPhotos->count() === 1 ? 'momento capturado' : 'momentos capturados' }}
+                        </div>
+                    </div>
+
+                    @if(session('gallery_success'))
+                        <div class="alert">{{ session('gallery_success') }}</div>
+                    @endif
+
+                    @if($galleryPhotos->count())
+                        <div class="gallery-grid @if($galleryPhotos->count() === 1) solo @endif">
+                            @foreach($galleryPhotos as $photo)
+                                <div class="gallery-item" onclick="openLightbox('{{ asset($photo->path) }}', '{{ e($photo->guest_name) }}', '{{ $photo->created_at->translatedFormat('d M Y') }}')">
+                                    <img src="{{ asset($photo->path) }}" alt="Foto de {{ $photo->guest_name }}" loading="lazy">
+                                    <div class="gallery-item-name">{{ $photo->guest_name }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="gallery-empty">Todavía no hay fotos. Sé el primero en compartir un recuerdo.</div>
+                    @endif
+
+                    <form class="gallery-form" method="POST" action="{{ route('gallery.upload', ['slug' => $event->slug]) }}" enctype="multipart/form-data">
+                        @csrf
+                        <div class="gallery-form-title">Sumá tu foto al álbum</div>
+
+                        <label for="gallery-guest-name">Tu nombre</label>
+                        <input type="text" id="gallery-guest-name" name="guest_name" required maxlength="60" placeholder="¿Cómo te llamás?">
+
+                        <label>Foto</label>
+                        <label class="gallery-file-wrap" id="gallery-file-wrap" for="gallery-photo">
+                            <div class="gallery-file-icon">📷</div>
+                            <div class="gallery-file-text" id="gallery-file-text">Elegí una foto</div>
+                            <div class="gallery-file-hint">JPG, PNG o WebP · hasta 5 MB</div>
+                            <input type="file" id="gallery-photo" name="photo" accept="image/jpeg,image/png,image/webp" required onchange="updateFileLabel(this)">
+                        </label>
+
+                        <button type="submit">Compartir</button>
+                    </form>
+                </div>
+
+                <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+                    <button type="button" class="lightbox-close" onclick="event.stopPropagation(); closeLightbox()">✕</button>
+                    <img id="lightbox-img" src="" alt="">
+                    <div class="lightbox-caption" id="lightbox-caption"></div>
                 </div>
             @endif
         </div>
@@ -1449,6 +2499,37 @@
 
         function openModal(){document.getElementById('modal').classList.add('open')}
         function closeModal(){document.getElementById('modal').classList.remove('open')}
+
+        // Lightbox de galería
+        function openLightbox(src, name, date) {
+            const lb = document.getElementById('lightbox');
+            if (!lb) return;
+            document.getElementById('lightbox-img').src = src;
+            const cap = document.getElementById('lightbox-caption');
+            cap.innerHTML = name ? `<b>${name}</b>${date ? ' · ' + date : ''}` : '';
+            lb.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            const lb = document.getElementById('lightbox');
+            if (!lb) return;
+            lb.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+        // Input de archivo estilizado
+        function updateFileLabel(input) {
+            const wrap = document.getElementById('gallery-file-wrap');
+            const text = document.getElementById('gallery-file-text');
+            if (input.files && input.files[0]) {
+                text.textContent = input.files[0].name;
+                wrap.classList.add('has-file');
+            } else {
+                text.textContent = 'Elegí una foto';
+                wrap.classList.remove('has-file');
+            }
+        }
 
         // Lógica de Toggle Chatbot
         function toggleChat() {

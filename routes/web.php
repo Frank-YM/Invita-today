@@ -10,6 +10,11 @@ Route::get('/', [InvitationController::class, 'show'])->name('invitation');
 Route::get('/e/{slug}', [InvitationController::class, 'show'])->name('invitation.public');
 Route::post('/rsvp', [InvitationController::class, 'rsvp'])->name('rsvp');
 
+// Galería pública (invitados suben sin login) — máximo 50 subidas por hora por IP
+Route::post('/e/{slug}/gallery', [InvitationController::class, 'uploadGuestPhoto'])
+    ->middleware('throttle:50,60')
+    ->name('gallery.upload');
+
 // Rutas de autenticación
 Route::get('/login', [GoogleAuthController::class, 'showLogin'])->name('login');
 Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
@@ -22,6 +27,11 @@ Route::get('/auth/bypass', [GoogleAuthController::class, 'bypass'])->name('auth.
 
 // Rutas protegidas de administración
 Route::middleware('auth')->group(function () {
+    Route::get('/mis-eventos', [InvitationController::class, 'eventsIndex'])->name('events.index');
+    Route::post('/mis-eventos', [InvitationController::class, 'eventsStore'])->name('events.store');
+    Route::get('/mis-eventos/{event}/seleccionar', [InvitationController::class, 'eventsSelect'])->name('events.select');
+    Route::delete('/mis-eventos/{event}', [InvitationController::class, 'eventsDestroy'])->name('events.destroy');
+
     Route::get('/admin', [InvitationController::class, 'admin'])->name('admin');
     Route::post('/admin/event', [InvitationController::class, 'updateEvent'])->name('event.update');
     Route::post('/admin/event/publish', [InvitationController::class, 'togglePublish'])->name('event.publish');
@@ -34,6 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/event/reveal-image/upload', [InvitationController::class, 'uploadRevealImage'])->name('event.reveal.upload');
     Route::delete('/admin/event/reveal-image', [InvitationController::class, 'removeRevealImage'])->name('event.reveal.remove');
     Route::delete('/admin/guests/{guest}', [InvitationController::class, 'deleteGuest'])->name('guest.delete');
+    Route::delete('/admin/gallery/{photo}', [InvitationController::class, 'deleteGuestPhoto'])->name('gallery.delete');
     
     // IA para administradores
     Route::post('/admin/ai/generate', [AIController::class, 'generate'])->name('ai.generate');
