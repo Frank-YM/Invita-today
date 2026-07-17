@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Invita · Invitaciones digitales para cualquier evento</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/themes/icono.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
@@ -34,13 +35,13 @@
         header .container{ display:flex; align-items:center; justify-content:space-between; }
         .brand{ display:flex; align-items:center; gap:10px; }
         .brand-mark{
-            width:34px; height:34px; border-radius:9px;
-            background:linear-gradient(135deg, #e88b3a 0%, #d4a3b3 100%);
+            width:36px; height:36px; border-radius:9px;
+            background:#fff;
             display:flex; align-items:center; justify-content:center;
-            color:#fff; font-family:'Playfair Display', serif;
-            font-weight:700; font-size:1.05rem;
-            box-shadow:0 4px 14px rgba(232,139,58,0.25);
+            overflow:hidden;
+            box-shadow:0 4px 14px rgba(15,23,42,0.08);
         }
+        .brand-mark img{ width:100%; height:100%; object-fit:contain; }
         .brand-name{
             font-family:'Playfair Display', serif; font-weight:700;
             font-size:1.2rem; letter-spacing:-0.5px; color:#0f172a;
@@ -406,7 +407,7 @@
         <header>
             <div class="container">
                 <div class="brand">
-                    <div class="brand-mark">i</div>
+                    <div class="brand-mark"><img src="{{ asset('images/themes/icono.png') }}" alt="Invita"></div>
                     <div class="brand-name">Invita</div>
                 </div>
                 <div class="header-links">

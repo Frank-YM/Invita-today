@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Mis eventos</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/themes/icono.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -28,12 +29,13 @@
         }
         .header-left { display:flex; align-items:center; gap:12px; }
         .header-brand {
-            width:36px; height:36px; border-radius:12px;
-            background: linear-gradient(135deg,#d4a3b3,#7c4dff);
+            width:40px; height:40px; border-radius:12px;
+            background:#fff;
             display:flex; align-items:center; justify-content:center;
-            color:#fff; font-weight:900; font-size:1.05rem;
-            box-shadow: 0 4px 10px rgba(124,77,255,0.25);
+            overflow:hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         }
+        .header-brand img { width:100%; height:100%; object-fit:contain; }
         h1{color:#3d2c40;font-size:1.15rem;font-weight:800;line-height:1.1}
         .subtitle-desc {color:#8a7ba5;font-size:0.72rem;margin-top:2px;font-weight:500}
 
@@ -173,7 +175,7 @@
     @endphp
     <div class="header">
         <div class="header-left">
-            <div class="header-brand">🎈</div>
+            <div class="header-brand"><img src="{{ asset('images/themes/icono.png') }}" alt="Invita"></div>
             <div>
                 <h1>Mis eventos</h1>
                 <p class="subtitle-desc">Gestioná todas tus invitaciones</p>
