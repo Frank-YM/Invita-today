@@ -15,6 +15,7 @@
             font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             color:#0f172a; background:#fafaf7;
             -webkit-font-smoothing:antialiased;
+            overflow-x:hidden;
         }
 
         /* ========= LAYOUT ========= */
@@ -339,7 +340,7 @@
             .mockup-row{ gap:16px; max-width:400px; }
         }
         @media (max-width:560px){
-            .container{ padding:0 22px; }
+            .container{ padding:0 24px; }
             header{ padding:14px 0; }
             .brand-mark{ width:28px; height:28px; font-size:0.9rem; border-radius:8px; }
             .brand-name{ font-size:1rem; }
@@ -394,7 +395,7 @@
             footer .container{ flex-direction:column; text-align:center; gap:6px; }
         }
         @media (max-width:380px){
-            .container{ padding:0 18px; }
+            .container{ padding:0 20px; }
             h1{ font-size:1.4rem; }
             .section-title{ font-size:1.2rem; }
             .card{ padding:18px 14px; }
