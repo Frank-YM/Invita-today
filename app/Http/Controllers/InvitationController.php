@@ -33,7 +33,7 @@ class InvitationController extends Controller
         $messages = $event->guests()->whereNotNull('message')->latest()->take(20)->get();
         $galleryPhotos = $event->show_gallery ? $event->guestPhotos()->take(60)->get() : collect();
 
-        return view('invitation', compact('event', 'confirmed', 'messages', 'isPreview', 'galleryPhotos'));
+        return view('invitation', compact('event', 'confirmed', 'messages', 'isPreview', 'isOwner', 'galleryPhotos'));
     }
 
     public function rsvp(Request $request)
@@ -328,6 +328,38 @@ class InvitationController extends Controller
         }
 
         return back()->with('saved', '🗑️ Foto eliminada');
+    }
+
+    public function uploadMusic(Request $request)
+    {
+        $request->validate([
+            'music' => 'required|file|mimes:mp3,m4a,aac,ogg,wav|max:10240',
+        ]);
+
+        $event = $this->currentEvent();
+        abort_if(!$event, 404);
+
+        if ($event->music_path) {
+            Storage::disk('public')->delete($event->music_path);
+        }
+
+        $path = $request->file('music')->store("events/{$event->id}/music", 'public');
+        $event->update(['music_path' => $path]);
+
+        return back()->with('saved', '🎵 Música subida correctamente');
+    }
+
+    public function deleteMusic()
+    {
+        $event = $this->currentEvent();
+        abort_if(!$event, 404);
+
+        if ($event->music_path) {
+            Storage::disk('public')->delete($event->music_path);
+            $event->update(['music_path' => null]);
+        }
+
+        return back()->with('saved', '🗑️ Música eliminada');
     }
 
     public function searchRevealImages(Request $request)

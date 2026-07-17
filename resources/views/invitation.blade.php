@@ -328,6 +328,115 @@
         .lightbox-caption b { font-weight:600; color:#fff; }
 
         .emoji-big{font-size:64px;display:inline-block;animation:wiggle 2.5s ease-in-out infinite}
+
+        /* Botón flotante de música */
+        .music-toggle {
+            position: fixed;
+            top: 18px; right: 18px;
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.95);
+            border: 1.5px solid rgba(0,0,0,0.08);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 1.3rem;
+            z-index: 9998;
+            transition: transform .15s, box-shadow .15s;
+            padding: 0;
+        }
+        .music-toggle:hover { transform: scale(1.08); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+        .music-toggle.playing { background: var(--p1); color: #fff; border-color: var(--p1); animation: music-pulse 1.8s ease-in-out infinite; }
+        @keyframes music-pulse {
+            0%,100% { box-shadow: 0 0 0 0 rgba(212,163,179,0.7), 0 6px 18px rgba(0,0,0,0.15); }
+            50%     { box-shadow: 0 0 0 12px rgba(212,163,179,0), 0 6px 18px rgba(0,0,0,0.15); }
+        }
+        .music-toggle.needs-tap::after {
+            content: ""; position: absolute; top: -4px; right: -4px;
+            width: 12px; height: 12px; border-radius: 50%;
+            background: #ff1744;
+            box-shadow: 0 0 0 3px rgba(255,23,68,0.3);
+            animation: music-dot 1.4s ease-in-out infinite;
+        }
+        @keyframes music-dot {
+            0%,100% { transform: scale(1); opacity: 1; }
+            50%     { transform: scale(1.2); opacity: 0.7; }
+        }
+        /* Overrides temas oscuros */
+        .tpl-disco .music-toggle, .tpl-neonparty .music-toggle {
+            background: rgba(20,0,5,0.85); color: #fff;
+            border-color: rgba(255,255,255,0.15);
+            backdrop-filter: blur(6px);
+        }
+        .tpl-disco .music-toggle.playing { background: #ff2d95; border-color: #ff2d95; }
+        .tpl-neonparty .music-toggle.playing { background: #ff1744; border-color: #ff1744; }
+
+        /* CTA promocional al final de la invitación */
+        .cta-invita {
+            margin: 48px auto 20px;
+            padding: 32px 24px;
+            text-align: center;
+            background: rgba(255,255,255,0.6);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 18px;
+            max-width: 480px;
+            backdrop-filter: blur(4px);
+            position: relative;
+            z-index: 3;
+        }
+        .cta-invita-eyebrow {
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--p2);
+            opacity: 0.7;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .cta-invita-text {
+            font-family: Georgia, 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--p3);
+            font-weight: 400;
+            margin-bottom: 18px;
+            letter-spacing: -0.3px;
+        }
+        .cta-invita-btn {
+            display: inline-block;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #7c4dff, #5a4e8c);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+            box-shadow: 0 6px 18px rgba(124,77,255,0.35);
+            transition: transform .15s, box-shadow .15s;
+        }
+        .cta-invita-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(124,77,255,0.5);
+        }
+
+        /* CTA en temas oscuros */
+        .tpl-disco .cta-invita,
+        .tpl-neonparty .cta-invita {
+            background: rgba(20,0,5,0.55);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .tpl-disco .cta-invita-text { color: #fff; text-shadow: 0 0 10px rgba(255,45,149,0.4); }
+        .tpl-neonparty .cta-invita-text { color: #fff; text-shadow: 0 0 10px rgba(255,23,68,0.6); }
+        .tpl-disco .cta-invita-eyebrow { color: #ff2d95; opacity: 1; }
+        .tpl-neonparty .cta-invita-eyebrow { color: #ff4d6d; opacity: 1; }
+        .tpl-disco .cta-invita-btn {
+            background: linear-gradient(135deg, #ff2d95, #8a4dff);
+            box-shadow: 0 6px 18px rgba(255,45,149,0.5);
+        }
+        .tpl-neonparty .cta-invita-btn {
+            background: linear-gradient(135deg, #ff1744, #b8002e);
+            box-shadow: 0 6px 18px rgba(255,23,68,0.5);
+        }
         @keyframes wiggle{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
 
         /* Chatbot flotante */
@@ -1751,6 +1860,81 @@
             text-transform: uppercase;
         }
 
+        /* Modal de RSVP en tema Neon Party */
+        .tpl-neonparty .modal {
+            background: rgba(10, 0, 5, 0.85);
+            backdrop-filter: blur(6px);
+        }
+        .tpl-neonparty .modal .form {
+            background: linear-gradient(180deg, #14000a 0%, #0a0000 100%);
+            border: 1.5px solid rgba(255, 23, 68, 0.55);
+            box-shadow:
+                0 0 40px rgba(255, 23, 68, 0.3),
+                0 0 80px rgba(184, 0, 46, 0.2),
+                inset 0 0 40px rgba(184, 0, 46, 0.1);
+            color: #f0d5da;
+        }
+        .tpl-neonparty .modal .form h3 {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 23, 68, 0.7), 0 0 20px rgba(255, 23, 68, 0.4);
+        }
+        .tpl-neonparty .modal .close {
+            color: #ff4d6d;
+            transition: color .15s;
+        }
+        .tpl-neonparty .modal .close:hover { color: #ff1744; }
+        .tpl-neonparty .modal label {
+            color: #ff8fa3;
+            font-weight: 700;
+        }
+        .tpl-neonparty .modal input,
+        .tpl-neonparty .modal textarea,
+        .tpl-neonparty .modal select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid rgba(255, 23, 68, 0.35);
+            color: #fff;
+        }
+        .tpl-neonparty .modal input:focus,
+        .tpl-neonparty .modal textarea:focus,
+        .tpl-neonparty .modal select:focus {
+            border-color: #ff1744;
+            box-shadow: 0 0 12px rgba(255, 23, 68, 0.5);
+        }
+        .tpl-neonparty .modal input::placeholder,
+        .tpl-neonparty .modal textarea::placeholder {
+            color: rgba(255, 143, 163, 0.5);
+        }
+        .tpl-neonparty .modal .companion-tag {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1.5px solid rgba(255, 23, 68, 0.35);
+            color: #f0d5da;
+        }
+        .tpl-neonparty .modal .companion-tag:hover {
+            border-color: #ff4d6d;
+            color: #fff;
+        }
+        .tpl-neonparty .modal .companion-tag.active {
+            background: linear-gradient(135deg, #ff1744, #b8002e);
+            color: #fff;
+            border-color: #ff1744;
+            box-shadow: 0 4px 14px rgba(255, 23, 68, 0.5);
+        }
+        .tpl-neonparty .modal .btn,
+        .tpl-neonparty .modal button[type=submit] {
+            background: linear-gradient(135deg, #ff1744, #b8002e);
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 20px rgba(255, 23, 68, 0.65), 0 0 30px rgba(255, 77, 109, 0.3);
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        .tpl-neonparty .modal .err { color: #ff8fa3; }
+        .tpl-neonparty .modal .alert {
+            background: rgba(255, 23, 68, 0.15);
+            color: #ff8fa3;
+            border: 1px solid rgba(255, 23, 68, 0.4);
+        }
+
         /* ========== 5 Diablitos distribuidos por el tema Neon Party ========== */
         .neonparty-devil {
             position: fixed;
@@ -1767,13 +1951,15 @@
             opacity: 0.09;
             animation: devil-breathe 6s ease-in-out infinite;
         }
-        /* Diablito 2: mediano arriba-izquierda, opacidad media, rotado */
+        /* Diablito 2: mediano arriba-izquierda, opacidad media-alta, rotado */
         .neonparty-devil.d2 {
             top: 8vh; left: -30px;
             width: 22vw; max-width: 180px;
-            opacity: 0.18;
+            opacity: 0.5;
             transform: rotate(-15deg);
             animation: devil-drift-a 9s ease-in-out infinite;
+            filter: drop-shadow(0 0 14px rgba(255, 23, 68, 0.8))
+                    drop-shadow(0 0 28px rgba(184, 0, 46, 0.4));
         }
         /* Diablito 3: chico medio-derecha, opacidad baja */
         .neonparty-devil.d3 {
@@ -1791,13 +1977,71 @@
             transform: rotate(20deg);
             animation: devil-breathe 8s ease-in-out infinite reverse;
         }
-        /* Diablito 5: chico arriba-derecha, opacidad media */
+        /* Diablito 5: protagonista visible (más nítido que los otros 4) */
         .neonparty-devil.d5 {
             top: 30vh; left: 12vw;
-            width: 12vw; max-width: 90px;
-            opacity: 0.22;
+            width: 16vw; max-width: 130px;
+            opacity: 0.85;
             transform: rotate(-8deg);
             animation: devil-drift-a 7s ease-in-out infinite reverse;
+            filter: drop-shadow(0 0 16px rgba(255, 23, 68, 0.9))
+                    drop-shadow(0 0 32px rgba(255, 77, 109, 0.5));
+        }
+        /* Diablitos extra distribuidos por toda la pantalla — mezcla de intensos y tenues */
+        .neonparty-devil.d6 {
+            top: 12vh; right: 14vw;
+            width: 12vw; max-width: 100px;
+            opacity: 0.55;
+            transform: rotate(18deg);
+            animation: devil-breathe 10s ease-in-out infinite;
+            filter: drop-shadow(0 0 12px rgba(255, 23, 68, 0.8))
+                    drop-shadow(0 0 24px rgba(255, 77, 109, 0.4));
+        }
+        .neonparty-devil.d7 {
+            top: 78vh; left: 40vw;
+            width: 11vw; max-width: 90px;
+            opacity: 0.10;
+            transform: rotate(-12deg);
+            animation: devil-drift-b 12s ease-in-out infinite;
+        }
+        .neonparty-devil.d8 {
+            top: 50vh; left: 32vw;
+            width: 9vw; max-width: 70px;
+            opacity: 0.16;
+            transform: rotate(25deg);
+            animation: devil-drift-a 8s ease-in-out infinite;
+        }
+        .neonparty-devil.d9 {
+            top: 5vh; left: 48vw;
+            width: 8vw; max-width: 65px;
+            opacity: 0.11;
+            transform: rotate(5deg);
+            animation: devil-breathe 7s ease-in-out infinite reverse;
+        }
+        .neonparty-devil.d10 {
+            top: 82vh; right: 22vw;
+            width: 15vw; max-width: 125px;
+            opacity: 0.7;
+            transform: rotate(-18deg);
+            animation: devil-drift-b 9s ease-in-out infinite reverse;
+            filter: drop-shadow(0 0 14px rgba(255, 23, 68, 0.85))
+                    drop-shadow(0 0 28px rgba(184, 0, 46, 0.5));
+        }
+        .neonparty-devil.d11 {
+            top: 22vh; right: 32vw;
+            width: 7vw; max-width: 55px;
+            opacity: 0.09;
+            transform: rotate(30deg);
+            animation: devil-drift-a 11s ease-in-out infinite;
+        }
+        .neonparty-devil.d12 {
+            top: 66vh; right: 4vw;
+            width: 12vw; max-width: 100px;
+            opacity: 0.45;
+            transform: rotate(-25deg);
+            animation: devil-breathe 8s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 77, 109, 0.75))
+                    drop-shadow(0 0 20px rgba(255, 23, 68, 0.35));
         }
         @keyframes devil-breathe {
             0%,100% { transform: scale(1) rotate(-3deg); }
@@ -2003,6 +2247,13 @@
         <img src="{{ asset('images/themes/emogimalo.png') }}" alt="" class="neonparty-devil d3" aria-hidden="true">
         <img src="{{ asset('images/themes/emogimalo.png') }}" alt="" class="neonparty-devil d4" aria-hidden="true">
         <img src="{{ asset('images/themes/emogimalo.png') }}" alt="" class="neonparty-devil d5" aria-hidden="true">
+        <img src="{{ asset('images/themes/emogimalo.png') }}" alt="" class="neonparty-devil d6" aria-hidden="true">
+        <img src="{{ asset('images/themes/emogimalo.png') }}" alt="" class="neonparty-devil d7" aria-hidden="true">
+        <img src="{{ asset('images/themes/emogimalo.png') }}" alt="" class="neonparty-devil d8" aria-hidden="true">
+        <img src="{{ asset('images/themes/emogimalo.png') }}" alt="" class="neonparty-devil d9" aria-hidden="true">
+        <img src="{{ asset('images/themes/emogimalo.png') }}" alt="" class="neonparty-devil d10" aria-hidden="true">
+        <img src="{{ asset('images/themes/emogimalo.png') }}" alt="" class="neonparty-devil d11" aria-hidden="true">
+        <img src="{{ asset('images/themes/emogimalo.png') }}" alt="" class="neonparty-devil d12" aria-hidden="true">
         <img src="{{ asset('images/themes/monja1.png') }}" alt="" class="neonparty-nun n1" aria-hidden="true">
         <img src="{{ asset('images/themes/monja1.png') }}" alt="" class="neonparty-nun n2" aria-hidden="true">
         <img src="{{ asset('images/themes/monja1.png') }}" alt="" class="neonparty-nun n3" aria-hidden="true">
@@ -2417,7 +2668,24 @@
                     <div class="lightbox-caption" id="lightbox-caption"></div>
                 </div>
             @endif
+
+            {{-- CTA promocional: se muestra a todos menos al dueño del evento --}}
+            @if(!$isOwner)
+                <div class="cta-invita">
+                    <div class="cta-invita-eyebrow">Creado con Invita</div>
+                    <div class="cta-invita-text">¿Querés una invitación así?</div>
+                    <a href="{{ route('login') }}" class="cta-invita-btn">Crear la mía gratis</a>
+                </div>
+            @endif
         </div>
+    @endif
+
+    {{-- Música de fondo --}}
+    @if($event->music_path)
+        <audio id="event-music" src="{{ Storage::url($event->music_path) }}" loop preload="auto"></audio>
+        <button type="button" class="music-toggle needs-tap" id="music-toggle" onclick="toggleMusic()" title="Reproducir música" aria-label="Reproducir música">
+            <span id="music-icon">🎵</span>
+        </button>
     @endif
 
     <!-- Botón flotante al administrador -->
@@ -2532,6 +2800,52 @@
         }
 
         // Lógica de Toggle Chatbot
+        // === Música de fondo ===
+        (function initMusic() {
+            const audio = document.getElementById('event-music');
+            const btn   = document.getElementById('music-toggle');
+            const icon  = document.getElementById('music-icon');
+            if (!audio || !btn) return;
+
+            audio.volume = 0.55;
+
+            function showPlaying() {
+                btn.classList.add('playing');
+                btn.classList.remove('needs-tap');
+                if (icon) icon.textContent = '⏸';
+                btn.title = 'Pausar música';
+            }
+            function showPaused() {
+                btn.classList.remove('playing');
+                if (icon) icon.textContent = '🎵';
+                btn.title = 'Reproducir música';
+            }
+
+            // Intentar autoplay (probablemente bloqueado; fallback = badge rojo)
+            const attempt = audio.play();
+            if (attempt !== undefined) {
+                attempt.then(showPlaying).catch(() => {
+                    btn.classList.add('needs-tap');
+                    // Al primer tap/scroll intentar de nuevo
+                    const kick = () => {
+                        audio.play().then(showPlaying).catch(() => {});
+                        document.removeEventListener('click', kick);
+                        document.removeEventListener('touchstart', kick);
+                    };
+                    document.addEventListener('click', kick, { once: false });
+                    document.addEventListener('touchstart', kick, { once: false, passive: true });
+                });
+            }
+
+            audio.addEventListener('play',  showPlaying);
+            audio.addEventListener('pause', showPaused);
+
+            window.toggleMusic = function() {
+                if (audio.paused) audio.play().catch(() => {});
+                else              audio.pause();
+            };
+        })();
+
         function toggleChat() {
             const win = document.getElementById('chat-window');
             if (win.style.display === 'none' || !win.style.display) {

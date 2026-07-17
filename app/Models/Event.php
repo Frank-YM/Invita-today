@@ -15,6 +15,7 @@ class Event extends Model
         'theme_character', 'template',
         'photo_1', 'photo_2',
         'reveal_image_1', 'reveal_image_2',
+        'music_path',
     ];
 
     protected $casts = [

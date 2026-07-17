@@ -52,10 +52,10 @@
         }
         .header-links a:hover{ color:#0f172a; }
 
-        /* ========= HERO ========= */
+        /* ========= HERO (minimalista) ========= */
         .hero{
-            padding:64px 0 40px;
-            display:grid; grid-template-columns:1fr 420px; gap:60px;
+            padding:56px 0 44px;
+            display:grid; grid-template-columns:1fr 400px; gap:56px;
             align-items:center;
         }
         .eyebrow{
@@ -63,12 +63,10 @@
             color:#e88b3a; font-weight:600; margin-bottom:14px;
             display:inline-flex; align-items:center; gap:8px;
         }
-        .eyebrow::before{
-            content:""; width:20px; height:1.5px; background:#e88b3a;
-        }
+        .eyebrow::before{ content:""; width:20px; height:1.5px; background:#e88b3a; }
         h1{
             font-family:'Playfair Display', serif;
-            font-size:3rem; font-weight:700; letter-spacing:-1.5px;
+            font-size:2.8rem; font-weight:700; letter-spacing:-1.5px;
             line-height:1.05; color:#0f172a; margin-bottom:18px;
         }
         h1 .highlight{
@@ -78,40 +76,28 @@
             font-style:italic;
         }
         .lead{
-            font-size:1.05rem; color:#475569; line-height:1.65;
-            max-width:520px; margin-bottom:28px;
+            font-size:1.02rem; color:#475569; line-height:1.6;
+            max-width:520px; margin-bottom:26px;
         }
 
-        /* Chips de tipos de eventos */
-        .event-chips{
-            display:flex; flex-wrap:wrap; gap:8px; margin-bottom:36px;
-        }
+        .event-chips{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:30px; }
         .event-chip{
-            font-size:0.85rem; color:#334155;
+            font-size:0.82rem; color:#334155;
             background:#fff; border:1px solid rgba(15,23,42,0.08);
-            padding:8px 14px; border-radius:999px; font-weight:500;
-            display:inline-flex; align-items:center; gap:7px;
-            transition:transform .12s, border-color .12s, box-shadow .12s;
+            padding:7px 13px; border-radius:999px; font-weight:500;
         }
-        .event-chip .ico{ color:#e88b3a; }
-        .event-chip:hover{ transform:translateY(-2px); border-color:#e88b3a; box-shadow:0 4px 12px rgba(232,139,58,0.08); }
 
-        /* Mini stats */
-        .stats{
-            display:flex; gap:36px; margin-top:8px;
-        }
+        .stats{ display:flex; gap:36px; }
         .stat-num{
             font-family:'Playfair Display', serif; font-weight:700;
-            font-size:1.7rem; color:#0f172a; line-height:1;
+            font-size:1.6rem; color:#0f172a; line-height:1;
         }
-        .stat-lbl{
-            font-size:0.75rem; color:#64748b; margin-top:4px; letter-spacing:0.5px;
-        }
+        .stat-lbl{ font-size:0.72rem; color:#64748b; margin-top:4px; letter-spacing:0.4px; }
 
-        /* ========= LOGIN CARD ========= */
+        /* ========= LOGIN CARD (minimalista) ========= */
         .card{
             background:#fff; border-radius:20px;
-            padding:32px 30px;
+            padding:30px 28px;
             border:1px solid rgba(15,23,42,0.06);
             box-shadow:
               0 1px 2px rgba(15,23,42,0.04),
@@ -119,11 +105,11 @@
         }
         .card h3{
             font-family:'Playfair Display', serif;
-            font-size:1.35rem; font-weight:700; letter-spacing:-0.3px;
+            font-size:1.3rem; font-weight:700; letter-spacing:-0.3px;
             color:#0f172a; margin-bottom:6px;
         }
         .card p.sub{
-            font-size:0.88rem; color:#64748b; margin-bottom:22px;
+            font-size:0.86rem; color:#64748b; margin-bottom:20px; line-height:1.5;
         }
         .btn-google{
             display:inline-flex; align-items:center; justify-content:center; gap:10px;
@@ -142,21 +128,9 @@
         }
         .btn-google svg{ width:14px; height:14px; }
 
-        .divider{
-            display:flex; align-items:center; gap:12px;
-            margin:18px 0 14px; color:#94a3b8; font-size:0.7rem; letter-spacing:1px; text-transform:uppercase;
-        }
-        .divider::before, .divider::after{ content:""; flex:1; height:1px; background:rgba(15,23,42,0.08); }
-        .chips{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
-        .chip{
-            font-size:0.7rem; color:#475569; background:#f1f5f9;
-            padding:5px 10px; border-radius:999px; font-weight:500;
-            display:inline-flex; align-items:center; gap:6px;
-        }
-        .chip .ico{ color:#e88b3a; width:12px; height:12px; }
         .fine-print{
-            margin-top:16px; text-align:center;
-            font-size:0.68rem; color:#94a3b8; line-height:1.5;
+            margin-top:14px; text-align:center;
+            font-size:0.7rem; color:#94a3b8; line-height:1.5;
         }
         .alert-error{
             background:#fef2f2; color:#991b1b;
@@ -165,7 +139,7 @@
             margin-bottom:16px; font-size:0.85rem;
         }
 
-        /* ========= SHOWCASE (mockups de invitaciones) ========= */
+        /* ========= SHOWCASE (mockups) ========= */
         .showcase{
             padding:50px 0 30px;
             border-top:1px solid rgba(15,23,42,0.06);
@@ -202,7 +176,6 @@
             text-align:center;
         }
 
-        /* Mock #1: baby shower rosa */
         .phone-screen.mock-baby{
             background:#fcf3f5;
             background-image:
@@ -238,7 +211,6 @@
             display:inline-block;
         }
 
-        /* Mock #2: dragon naranja */
         .phone-screen.mock-dragon{
             background:#fefaf5;
             background-image:
@@ -320,14 +292,6 @@
             color:#e88b3a;
         }
         .feature-icon svg{ width:20px; height:20px; }
-
-        /* Iconos SVG minimalistas (line, 2 colores máx) */
-        .ico{
-            width:14px; height:14px; display:inline-block; vertical-align:-2px;
-            stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round;
-            fill:none; stroke:currentColor;
-        }
-        .ico-lg{ width:16px; height:16px; }
         .feature h4{
             font-family:'Playfair Display', serif;
             font-size:1.05rem; font-weight:700; letter-spacing:-0.3px;
@@ -342,9 +306,7 @@
         .how-grid{
             display:grid; grid-template-columns:repeat(3, 1fr); gap:24px;
         }
-        .step{
-            padding:24px; text-align:left; position:relative;
-        }
+        .step{ padding:24px; text-align:left; position:relative; }
         .step-num{
             font-family:'Playfair Display', serif;
             font-weight:700; font-size:2.4rem; line-height:1;
@@ -455,45 +417,12 @@
             </div>
         </header>
 
+        {{-- HERO minimalizado (solo lo pedido) --}}
         <main class="container hero">
             <div>
                 <span class="eyebrow">Invitaciones digitales</span>
                 <h1>Creá tu invitación para <span class="highlight">cualquier evento</span>, en minutos.</h1>
                 <p class="lead">Baby shower, cumpleaños, bautizo, revelación de género, aniversario… Elegí un modelo, personalizalo con fotos e imágenes, compartí el enlace y mirá quién confirma en tiempo real.</p>
-
-                <div class="event-chips">
-                    <span class="event-chip">
-                        <svg class="ico" viewBox="0 0 24 24"><path d="M10 4h4M12 4v3M9 7h6M8 10c0 5 2 10 4 10s4-5 4-10z"/></svg>
-                        Baby Shower
-                    </span>
-                    <span class="event-chip">
-                        <svg class="ico" viewBox="0 0 24 24"><path d="M5 20h14v-6H5zM6 14V11a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3M9 9V6M12 9V6M15 9V6M9 6c0-1 1-2 0-3M12 6c0-1 1-2 0-3M15 6c0-1 1-2 0-3"/></svg>
-                        Cumpleaños
-                    </span>
-                    <span class="event-chip">
-                        <svg class="ico" viewBox="0 0 24 24"><path d="M5 18c3-1 5-4 7-4s4 3 7 4M6 15l2-3 3 1 3-4 3 2 2-3M4 20h16"/></svg>
-                        Bautizo
-                    </span>
-                    <span class="event-chip">
-                        <svg class="ico" viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 5.5-7 10-7 10z" stroke-linejoin="round"/></svg>
-                        Revelación
-                    </span>
-                    <span class="event-chip">
-                        <svg class="ico" viewBox="0 0 24 24"><path d="M12 3l1.8 5.5h5.7l-4.6 3.4 1.7 5.5L12 14l-4.6 3.4 1.7-5.5L4.5 8.5h5.7z"/></svg>
-                        Y más
-                    </span>
-                </div>
-
-                <div class="stats">
-                    <div>
-                        <div class="stat-num">10+</div>
-                        <div class="stat-lbl">Modelos únicos</div>
-                    </div>
-                    <div>
-                        <div class="stat-num">RSVP</div>
-                        <div class="stat-lbl">En tiempo real</div>
-                    </div>
-                </div>
             </div>
 
             <div class="card">
@@ -516,28 +445,13 @@
                     Continuar con Google
                 </a>
 
-                <div class="divider">Rápido y seguro</div>
-                <div class="chips">
-                    <span class="chip">
-                        <svg class="ico" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-                        Sin contraseñas
-                    </span>
-                    <span class="chip">
-                        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-                        Listo en 1 min
-                    </span>
-                    <span class="chip">
-                        <svg class="ico" viewBox="0 0 24 24"><path d="M20 12v8H4v-8M22 8H2v4h20zM12 8v13M12 8s-2-5-5-3.5S8 8 12 8zM12 8s2-5 5-3.5S16 8 12 8z"/></svg>
-                        Gratis
-                    </span>
-                </div>
-
                 <div class="fine-print">
                     Al continuar aceptás nuestros términos.
                 </div>
             </div>
         </main>
 
+        {{-- SHOWCASE (mockups de invitaciones) --}}
         <section class="showcase">
             <div class="container">
                 <div class="section-eyebrow">Así se ven</div>
@@ -574,6 +488,7 @@
             </div>
         </section>
 
+        {{-- FEATURES --}}
         <section class="features-section" id="features">
             <div class="container">
                 <div class="section-eyebrow">Todo lo que necesitás</div>
@@ -648,6 +563,7 @@
             </div>
         </section>
 
+        {{-- HOW --}}
         <section class="how-section" id="how">
             <div class="container">
                 <div class="section-eyebrow">Cómo funciona</div>

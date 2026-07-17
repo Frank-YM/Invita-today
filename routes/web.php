@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/event/publish', [InvitationController::class, 'togglePublish'])->name('event.publish');
     Route::post('/admin/event/photo', [InvitationController::class, 'uploadPhoto'])->name('event.photo.upload');
     Route::delete('/admin/event/photo', [InvitationController::class, 'deletePhoto'])->name('event.photo.delete');
+    Route::post('/admin/event/music', [InvitationController::class, 'uploadMusic'])->name('event.music.upload');
+    Route::delete('/admin/event/music', [InvitationController::class, 'deleteMusic'])->name('event.music.delete');
     Route::get('/admin/reveal-images/search', [InvitationController::class, 'searchRevealImages'])->name('reveal.search');
     Route::get('/admin/reveal-images/web-search', [InvitationController::class, 'webSearchRevealImages'])->name('reveal.search.web');
     Route::post('/admin/event/reveal-image/import', [InvitationController::class, 'importRevealImage'])->name('event.reveal.import');

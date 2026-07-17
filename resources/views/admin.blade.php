@@ -750,6 +750,35 @@
                 <small style="display:block; margin-top:6px; color:#8a7ba5; font-size:0.65rem; text-align:center;">JPG/PNG/WEBP hasta 4MB.</small>
             </div>
 
+            {{-- Música de fondo --}}
+            <div class="card" style="padding:14px 16px;">
+                <div class="card-title" style="margin-bottom:8px;">Música de fondo</div>
+                @if($event->music_path)
+                    <div style="background:#faf8f5; border:1px solid #efe6e9; border-radius:12px; padding:10px 12px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                            <span style="font-size:1.2rem;">🎵</span>
+                            <span style="font-size:0.78rem; font-weight:600; color:#3d2c40; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ basename($event->music_path) }}</span>
+                        </div>
+                        <audio controls preload="metadata" src="{{ Storage::url($event->music_path) }}" style="width:100%; height:32px; margin-bottom:8px;"></audio>
+                        <form method="POST" action="{{ route('event.music.delete') }}" onsubmit="return confirm('¿Eliminar la música?')" style="margin:0;">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn-sm" style="width:100%; font-size:0.72rem; padding:6px; background:#fdf2f2; color:#e63946; border:1px solid #fdf2f2; border-radius:8px; cursor:pointer; font-weight:600;">🗑️ Quitar música</button>
+                        </form>
+                    </div>
+                @else
+                    <form method="POST" action="{{ route('event.music.upload') }}" enctype="multipart/form-data" id="musicForm">
+                        @csrf
+                        <label for="music-file" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px 12px; background:#faf8f5; border:1.5px dashed #d8d0c2; border-radius:12px; cursor:pointer; gap:6px; transition: border-color .15s, background .15s;">
+                            <span style="font-size:1.8rem;">🎵</span>
+                            <span style="font-size:0.85rem; font-weight:700; color:#6e5a63;" id="music-label-text">Subir canción</span>
+                            <span style="font-size:0.68rem; color:#8a7ba5;">MP3, M4A, OGG · hasta 10 MB</span>
+                            <input type="file" id="music-file" name="music" accept="audio/mpeg,audio/mp3,audio/mp4,audio/m4a,audio/aac,audio/ogg,audio/wav,.mp3,.m4a,.aac,.ogg,.wav" style="display:none;" onchange="onMusicPicked(this)">
+                        </label>
+                    </form>
+                @endif
+                <small style="display:block; margin-top:6px; color:#8a7ba5; font-size:0.65rem; text-align:center;">Se reproduce en la invitación al tocar el botón 🎵</small>
+            </div>
+
             {{-- Tarjeta de Enlace (compacta) --}}
             <div class="card" style="padding:14px 16px;">
                 <div class="card-title" style="margin-bottom:8px;">Enlace de tu invitación</div>
@@ -903,6 +932,14 @@
             } catch (e) {
                 label.textContent = '⚠️ Error';
                 setTimeout(() => { label.textContent = original; btn.disabled = false; }, 2000);
+            }
+        }
+
+        function onMusicPicked(input) {
+            const label = document.getElementById('music-label-text');
+            if (input.files && input.files[0]) {
+                if (label) label.textContent = 'Subiendo ' + input.files[0].name + '...';
+                input.form.submit();
             }
         }
 
