@@ -56,7 +56,7 @@
 
         /* ========= HERO (minimalista) ========= */
         .hero{
-            padding:56px 0 44px;
+            padding-top:56px; padding-bottom:44px;
             display:grid; grid-template-columns:1fr 400px; gap:56px;
             align-items:center;
         }
@@ -329,7 +329,7 @@
 
         /* ========= RESPONSIVE ========= */
         @media (max-width:960px){
-            .hero{ grid-template-columns:1fr; gap:28px; padding:36px 0 12px; }
+            .hero{ grid-template-columns:1fr; gap:28px; padding-top:36px; padding-bottom:12px; }
             h1{ font-size:2rem; }
             .features-grid, .how-grid{ grid-template-columns:1fr; gap:10px; }
             .features-section{ padding:36px 0 12px; }
@@ -340,14 +340,14 @@
             .mockup-row{ gap:16px; max-width:400px; }
         }
         @media (max-width:560px){
-            .container{ padding:0 24px; }
+            .container{ padding-left:28px !important; padding-right:28px !important; }
             header{ padding:14px 0; }
             .brand-mark{ width:28px; height:28px; font-size:0.9rem; border-radius:8px; }
             .brand-name{ font-size:1rem; }
             .header-links{ gap:14px; }
             .header-links a{ font-size:0.75rem; }
 
-            .hero{ padding:34px 0 26px; gap:26px; }
+            .hero{ padding-top:34px; padding-bottom:26px; gap:26px; }
             .eyebrow{ font-size:0.65rem; letter-spacing:1.5px; margin-bottom:14px; }
             h1{ font-size:1.6rem; letter-spacing:-0.8px; margin-bottom:16px; line-height:1.15; }
             .lead{ font-size:0.92rem; line-height:1.65; margin-bottom:24px; }
@@ -395,7 +395,7 @@
             footer .container{ flex-direction:column; text-align:center; gap:6px; }
         }
         @media (max-width:380px){
-            .container{ padding:0 20px; }
+            .container{ padding-left:22px !important; padding-right:22px !important; }
             h1{ font-size:1.4rem; }
             .section-title{ font-size:1.2rem; }
             .card{ padding:18px 14px; }
